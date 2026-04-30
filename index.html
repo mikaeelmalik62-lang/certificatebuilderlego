@@ -6,1122 +6,1126 @@
 <title>LEGO Speed Build Certificate Builder</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Nunito',sans-serif; background:#1a1a2e; min-height:100vh; }
+:root {
+  --accent:#f7b731; --accent-dk:#c77d0e;
+  --bg:#0d1117; --sb:#0f1420;
+  --glass:rgba(255,255,255,0.05); --glass-border:rgba(255,255,255,0.09);
+  --text:rgba(255,255,255,0.92); --dim:rgba(255,255,255,0.42);
+  --radius:14px; --radius-sm:9px;
+  --spring: cubic-bezier(0.34,1.3,0.64,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
+  display:flex;flex-direction:column;height:100vh;overflow:hidden;}
 
 /* ══ TOP BAR ══ */
-#control-panel {
-  background:#16213e; border-bottom:3px solid #0f3460;
-  padding:8px 16px; display:flex; flex-wrap:wrap;
-  align-items:center; gap:8px;
-  position:sticky; top:0; z-index:200;
+#topbar{
+  display:flex;align-items:center;gap:10px;padding:10px 18px;
+  background:rgba(13,17,23,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--glass-border);z-index:300;flex-shrink:0;
 }
-#control-panel h1 { font-family:'Fredoka One',cursive; color:#f7b731; font-size:17px; flex:0 0 auto; }
-.ctrl-group {
-  display:flex; align-items:center; gap:6px;
-  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
-  border-radius:9px; padding:5px 10px;
+#topbar .brand{font-family:'Fredoka One',cursive;color:var(--accent);font-size:18px;flex:0 0 auto;margin-right:4px;}
+.top-sep{width:1px;height:22px;background:var(--glass-border);flex-shrink:0;}
+.zoom-wrap{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+.zoom-wrap label{font-size:11px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;}
+#zoom-slider{
+  -webkit-appearance:none;width:90px;height:4px;border-radius:2px;
+  background:linear-gradient(to right,var(--accent) var(--pct,60%),rgba(255,255,255,0.15) var(--pct,60%));
+  outline:none;cursor:pointer;
 }
-.ctrl-group label { color:#aaa; font-size:11px; font-weight:700; text-transform:uppercase; white-space:nowrap; }
-.ctrl-group input[type=text] {
-  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
-  border-radius:6px; color:#fff; font-family:'Nunito',sans-serif;
-  font-size:13px; padding:4px 8px; outline:none; transition:border 0.2s;
+#zoom-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 0 3px rgba(247,183,49,0.25);cursor:pointer;transition:transform .15s var(--spring);}
+#zoom-slider::-webkit-slider-thumb:hover{transform:scale(1.2);}
+#zoom-val{font-size:11px;color:var(--dim);width:30px;text-align:right;font-weight:700;}
+.top-btns{display:flex;gap:8px;margin-left:auto;align-items:center;}
+#ready-badge{
+  display:none;align-items:center;gap:5px;
+  background:rgba(0,200,100,0.12);border:1px solid rgba(0,200,100,0.3);
+  border-radius:20px;padding:4px 12px;font-size:11px;color:#00c864;font-weight:700;
 }
-.ctrl-group input[type=text]:focus { border-color:#f7b731; }
-.ctrl-group input.w-name   { width:155px; }
-.ctrl-group input.w-narrow { width:72px; }
-.ctrl-group input.w-mid    { width:120px; }
-.ctrl-group input.w-wide   { width:195px; }
-.print-btn {
-  margin-left:auto; background:#f7b731; color:#1a1a2e; border:none;
-  border-radius:9px; font-family:'Fredoka One',cursive; font-size:13px;
-  padding:7px 18px; cursor:pointer; transition:all 0.2s;
-  box-shadow:0 3px 0 #c77d0e; flex:0 0 auto; white-space:nowrap;
+#ready-badge::before{content:'●';font-size:8px;}
+.icon-btn{
+  background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius-sm);
+  color:var(--dim);font-size:12px;padding:6px 12px;cursor:pointer;transition:all .2s;
+  font-family:'Nunito',sans-serif;font-weight:700;white-space:nowrap;
 }
-.print-btn:hover  { filter:brightness(1.1); transform:translateY(-1px); }
-.print-btn:active { transform:translateY(1px); box-shadow:none; }
+.icon-btn:hover{background:rgba(255,255,255,0.1);color:var(--text);}
+.print-btn{
+  background:var(--accent);color:#111;border:none;border-radius:var(--radius-sm);
+  font-family:'Fredoka One',cursive;font-size:13px;padding:7px 18px;
+  cursor:pointer;box-shadow:0 3px 0 var(--accent-dk);transition:all .2s;white-space:nowrap;
+}
+.print-btn:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.print-btn:active{transform:translateY(1px);box-shadow:none;}
 
-/* ══ SELECTOR BAR ══ */
-#selector-bar {
-  background:#0f1b35; border-bottom:2px solid #0a1528;
-  padding:8px 18px; display:flex; flex-wrap:wrap; gap:14px;
-  align-items:flex-start; position:sticky; top:52px; z-index:150;
-}
-.sel-group { display:flex; flex-direction:column; gap:4px; }
-.sel-label { font-size:10px; color:#555; text-transform:uppercase; letter-spacing:1px; font-weight:700; }
-.pills { display:flex; gap:4px; flex-wrap:wrap; }
+/* ══ BODY LAYOUT ══ */
+#layout{display:flex;flex:1;overflow:hidden;}
 
-.theme-pill {
-  padding:4px 11px; border-radius:16px; border:2px solid transparent;
-  font-family:'Fredoka One',cursive; font-size:11px; cursor:pointer;
-  transition:all 0.18s; color:#fff; white-space:nowrap;
+/* ══ SIDEBAR ══ */
+#sidebar{
+  width:278px;flex-shrink:0;overflow-y:auto;
+  background:rgba(10,14,26,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-right:1px solid var(--glass-border);padding:12px 10px 24px;
+  display:flex;flex-direction:column;gap:7px;
 }
-.theme-pill:hover  { filter:brightness(1.2); }
-.theme-pill.active { border-color:#fff; transform:scale(1.07); box-shadow:0 0 8px rgba(255,255,255,0.25); }
+#sidebar::-webkit-scrollbar{width:4px;}
+#sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px;}
 
-.layout-pill {
-  padding:3px 9px; border-radius:10px; border:1.5px solid rgba(255,255,255,0.12);
-  font-family:'Nunito',sans-serif; font-weight:800; font-size:10px;
-  cursor:pointer; transition:all 0.15s; color:rgba(255,255,255,0.5);
-  background:rgba(255,255,255,0.04); white-space:nowrap;
+/* Accordion sections */
+.sec{
+  background:var(--glass);border:1px solid var(--glass-border);
+  border-radius:var(--radius);overflow:hidden;
 }
-.layout-pill:hover  { background:rgba(255,255,255,0.1); color:#fff; }
-.layout-pill.active { border-color:#f7b731; color:#f7b731; background:rgba(247,183,49,0.12); }
+.sec-hd{
+  display:flex;align-items:center;gap:8px;padding:10px 13px;
+  cursor:pointer;transition:background .18s;user-select:none;
+}
+.sec-hd:hover{background:rgba(255,255,255,0.05);}
+.sec-hd .ico{font-size:14px;flex-shrink:0;}
+.sec-hd .lbl{font-family:'Fredoka One',cursive;font-size:13px;color:var(--text);flex:1;}
+.sec-hd .arrow{font-size:9px;color:var(--dim);transition:transform .3s var(--spring);}
+.sec.open .sec-hd .arrow{transform:rotate(180deg);}
+.sec-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .38s cubic-bezier(0.4,0,0.2,1),padding .3s;
+  padding:0 12px;
+}
+.sec.open .sec-body{max-height:1200px;padding:2px 12px 12px;}
+
+/* Fields */
+.field{margin-bottom:9px;}
+.field:last-child{margin-bottom:0;}
+.field>label{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:10px;color:var(--dim);text-transform:uppercase;
+  letter-spacing:.9px;font-weight:700;margin-bottom:4px;
+}
+.field input[type=text],.field textarea,.field select{
+  width:100%;background:rgba(255,255,255,0.07);
+  border:1.5px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);
+  color:var(--text);font-family:'Nunito',sans-serif;
+  font-size:13px;padding:8px 11px;outline:none;
+  transition:border-color .2s,background .2s;
+}
+.field textarea{resize:vertical;min-height:64px;line-height:1.5;}
+.field input:focus,.field textarea:focus{
+  border-color:var(--accent);background:rgba(247,183,49,0.07);
+}
+.field input.filled{border-color:rgba(0,200,100,0.35);background:rgba(0,200,100,0.04);}
+.char-ct{font-size:9px;color:var(--dim);font-weight:700;transition:color .2s;}
+.char-ct.warn{color:var(--accent);}
+.char-ct.over{color:#e3001b;}
+
+/* Quick Presets */
+.presets-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;}
+.preset-btn{
+  border:none;border-radius:10px;padding:9px 6px;
+  font-family:'Fredoka One',cursive;font-size:12px;
+  cursor:pointer;transition:transform .15s var(--spring),filter .15s;
+  letter-spacing:.5px;
+}
+.preset-btn:hover{transform:translateY(-2px);filter:brightness(1.1);}
+.preset-btn:active{transform:scale(.96);}
+.pb-gold  {background:linear-gradient(135deg,#ffe566,#f7b731,#c77d0e);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
+.pb-silver{background:linear-gradient(135deg,#fff,#c8c8c8,#888);color:#333;}
+.pb-bronze{background:linear-gradient(135deg,#ffd9a0,#cd7f32,#7a3a00);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
+.pb-part  {background:linear-gradient(135deg,#7ecfff,#006cb7,#004a8f);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
+
+/* Multiple names */
+.multi-header{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:10px;color:var(--dim);text-transform:uppercase;
+  letter-spacing:.9px;font-weight:700;margin-bottom:4px;margin-top:4px;
+}
+.name-nav{display:flex;align-items:center;gap:8px;margin-top:7px;justify-content:center;}
+.nav-btn{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+  color:var(--text);cursor:pointer;font-size:14px;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s,transform .15s var(--spring);
+}
+.nav-btn:hover{background:rgba(247,183,49,0.25);transform:scale(1.08);}
+.nav-btn:disabled{opacity:.25;cursor:default;}
+.name-ct{font-size:11px;color:var(--dim);font-weight:700;min-width:36px;text-align:center;}
+
+/* iOS-style toggles */
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-lbl{font-size:12px;color:var(--text);}
+.tog{position:relative;width:38px;height:22px;flex-shrink:0;}
+.tog input{opacity:0;width:0;height:0;position:absolute;}
+.tog-track{
+  position:absolute;inset:0;border-radius:11px;
+  background:rgba(255,255,255,0.12);
+  transition:background .25s;cursor:pointer;
+}
+.tog input:checked + .tog-track{background:#34c759;}
+.tog-thumb{
+  position:absolute;top:3px;left:3px;width:16px;height:16px;
+  border-radius:50%;background:#fff;
+  transition:transform .25s var(--spring);
+  box-shadow:0 1px 4px rgba(0,0,0,.4);pointer-events:none;
+}
+.tog input:checked ~ .tog-thumb{transform:translateX(16px);}
+
+/* Theme & Layout pills */
+.pill-wrap{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
+.t-pill{
+  padding:4px 11px;border-radius:14px;border:2px solid transparent;
+  font-family:'Fredoka One',cursive;font-size:11px;cursor:pointer;
+  transition:all .18s var(--spring);color:#fff;white-space:nowrap;
+}
+.t-pill:hover{filter:brightness(1.15);}
+.t-pill.active{border-color:#fff;transform:scale(1.07);box-shadow:0 0 8px rgba(255,255,255,.25);}
+.l-pill{
+  padding:3px 9px;border-radius:8px;border:1.5px solid rgba(255,255,255,.11);
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;
+  cursor:pointer;transition:all .15s;color:rgba(255,255,255,.5);
+  background:rgba(255,255,255,.03);white-space:nowrap;
+}
+.l-pill:hover{background:rgba(255,255,255,.09);color:var(--text);}
+.l-pill.active{border-color:var(--accent);color:var(--accent);background:rgba(247,183,49,.1);}
+
+/* Section label */
+.sec-sublabel{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin:8px 0 4px;}
+
+/* Reset / clear */
+#reset-btn{
+  background:rgba(227,0,27,0.1);border:1px solid rgba(227,0,27,0.25);
+  border-radius:var(--radius-sm);color:#ff5555;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;
+  padding:9px;cursor:pointer;transition:all .2s;text-align:center;
+  margin-top:4px;
+}
+#reset-btn:hover{background:rgba(227,0,27,0.2);border-color:rgba(227,0,27,0.5);}
 
 /* ══ CERT AREA ══ */
-#cert-area { display:flex; justify-content:center; padding:24px; }
+#cert-area{flex:1;overflow:auto;display:flex;flex-direction:column;align-items:center;padding:24px;gap:0;}
+#cert-zoom-outer{transform-origin:top center;transition:transform .25s ease;}
 
-.page {
-  width:960px; height:680px; position:relative;
-  border-radius:10px; overflow:hidden;
-  box-shadow:0 12px 60px rgba(0,0,0,0.7); flex-shrink:0;
-}
-
-/* ══ BRICK CANVAS ══ */
-#brick-canvas {
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  z-index:2; pointer-events:none;
-}
+/* ══ PAGE ══ */
+.page{width:960px;height:680px;position:relative;border-radius:10px;overflow:hidden;
+  box-shadow:0 16px 70px rgba(0,0,0,.75);flex-shrink:0;}
+#brick-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;}
 
 /* ══ PLACEMENT BADGE ══ */
-.placement-badge {
-  position:absolute; z-index:10;
-  width:92px; height:92px; border-radius:50%;
-  display:none; flex-direction:column;
-  align-items:center; justify-content:center; text-align:center;
-  transition:opacity 0.15s;
+.placement-badge{
+  position:absolute;z-index:10;width:92px;height:92px;border-radius:50%;
+  display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;
 }
-.placement-badge.gold {
-  background:radial-gradient(circle at 36% 30%, #fff9c0, #f7b731 44%, #b86b00 100%);
-  border:4px solid #c77d0e;
-  box-shadow:0 0 0 3px #f7b731, 0 0 22px rgba(247,183,49,0.7), 0 5px 14px rgba(0,0,0,0.4);
+.placement-badge.gold  {background:radial-gradient(circle at 36% 30%,#fff9c0,#f7b731 44%,#b86b00);border:4px solid #c77d0e;box-shadow:0 0 0 3px #f7b731,0 0 22px rgba(247,183,49,.7),0 5px 14px rgba(0,0,0,.4);}
+.placement-badge.silver{background:radial-gradient(circle at 36% 30%,#fff,#d4d4d4 44%,#777);border:4px solid #999;box-shadow:0 0 0 3px #ccc,0 0 18px rgba(180,180,180,.55),0 5px 14px rgba(0,0,0,.35);}
+.placement-badge.bronze{background:radial-gradient(circle at 36% 30%,#ffe0a0,#cd7f32 44%,#7a3a00);border:4px solid #8b4513;box-shadow:0 0 0 3px #cd7f32,0 0 18px rgba(205,127,50,.55),0 5px 14px rgba(0,0,0,.35);}
+.placement-badge.other {background:radial-gradient(circle at 36% 30%,#d0eaff,#2255cc 44%,#0a1a6e);border:4px solid #1a3a9a;box-shadow:0 0 0 3px #2255cc,0 0 18px rgba(34,85,204,.5),0 5px 14px rgba(0,0,0,.35);}
+.placement-num{font-family:'Fredoka One',cursive;font-size:27px;line-height:1;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,.45);}
+.placement-label{font-family:'Fredoka One',cursive;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.92);text-shadow:0 1px 3px rgba(0,0,0,.4);margin-top:1px;}
+.placement-stars{font-size:9px;margin-top:2px;letter-spacing:1px;}
+
+/* ══ TROPHY WATERMARK ══ */
+.trophy-wm{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:200px;opacity:.045;pointer-events:none;z-index:2;line-height:1;
+  display:none;user-select:none;
 }
-.placement-badge.silver {
-  background:radial-gradient(circle at 36% 30%, #fff, #d4d4d4 44%, #777 100%);
-  border:4px solid #999;
-  box-shadow:0 0 0 3px #ccc, 0 0 18px rgba(180,180,180,0.55), 0 5px 14px rgba(0,0,0,0.35);
-}
-.placement-badge.bronze {
-  background:radial-gradient(circle at 36% 30%, #ffe0a0, #cd7f32 44%, #7a3a00 100%);
-  border:4px solid #8b4513;
-  box-shadow:0 0 0 3px #cd7f32, 0 0 18px rgba(205,127,50,0.55), 0 5px 14px rgba(0,0,0,0.35);
-}
-.placement-badge.other {
-  background:radial-gradient(circle at 36% 30%, #d0eaff, #2255cc 44%, #0a1a6e 100%);
-  border:4px solid #1a3a9a;
-  box-shadow:0 0 0 3px #2255cc, 0 0 18px rgba(34,85,204,0.5), 0 5px 14px rgba(0,0,0,0.35);
-}
-.placement-num {
-  font-family:'Fredoka One',cursive; font-size:27px; line-height:1;
-  color:#fff; text-shadow:0 2px 5px rgba(0,0,0,0.45);
-}
-.placement-label {
-  font-family:'Fredoka One',cursive; font-size:10px; letter-spacing:2px;
-  color:rgba(255,255,255,0.92); text-shadow:0 1px 3px rgba(0,0,0,0.4);
-  margin-top:1px;
-}
-.placement-stars { font-size:9px; margin-top:2px; letter-spacing:1px; }
+
+/* ══ SPARKLE DECOR ══ */
+.sparkle-wrap{position:absolute;inset:0;pointer-events:none;z-index:2;display:none;}
+.spark{position:absolute;font-size:18px;opacity:.55;line-height:1;}
 
 /* ══ CERT CONTENT ══ */
-.cert-content {
-  position:absolute; z-index:3;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:space-between;
-  padding:14px 28px 12px;
-  top:46px; left:46px; right:46px; bottom:46px; /* default — overridden by JS */
+.cert-content{
+  position:absolute;z-index:3;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:14px 28px 10px;top:46px;left:46px;right:46px;bottom:46px;
 }
 
-/* ══ COMMON ELEMENTS ══ */
-.org-pill {
-  font-family:'Fredoka One',cursive; font-size:13px;
-  letter-spacing:1.5px; text-transform:uppercase;
-  border-radius:20px; padding:4px 18px; border:2px solid;
-  white-space:nowrap; text-align:center; max-width:100%;
-  overflow:hidden; text-overflow:ellipsis;
+/* ══ COMMON CERT ELEMENTS ══ */
+.org-pill{
+  font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;
+  border-radius:20px;padding:4px 18px;border:2px solid;white-space:nowrap;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;text-align:center;
 }
-.header-row { display:flex; align-items:center; gap:13px; }
-.lego-badge {
-  font-family:'Fredoka One',cursive; font-size:34px; letter-spacing:3px;
-  border-radius:8px; padding:3px 18px; border:4px solid; line-height:1.2; flex-shrink:0;
-}
-.cert-title-line { font-family:'Fredoka One',cursive; font-size:26px; letter-spacing:1px; text-align:center; }
-.stars-line { font-size:19px; letter-spacing:4px; margin-top:2px; text-align:center; }
-
-.presented-block {
-  border-radius:13px; padding:10px 28px 8px;
-  text-align:center; position:relative;
-  width:100%; max-width:660px; border:3px solid;
-}
-.presented-block::before {
-  content:''; position:absolute; top:-12px; left:50%; transform:translateX(-50%);
-  width:22px; height:11px;
-  border-radius:50% 50% 0 0 / 100% 100% 0 0;
-  border:3px solid; border-bottom:none;
-}
-.presented-label { font-size:12px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:4px; }
-
-/* ══ NAME BRICKS ══ */
-.lego-text-name {
-  display:flex; justify-content:center; align-items:center;
-  gap:3px; margin:4px 0 2px; width:100%; overflow:hidden;
-}
-.lego-letter {
-  display:inline-flex; flex-direction:column; align-items:center;
-  justify-content:flex-end; border-radius:4px; border:2.5px solid;
-  position:relative; font-family:'Fredoka One',cursive;
-  padding-bottom:3px; flex-shrink:0;
-}
-.lego-letter .stud {
-  position:absolute; top:-8px; left:50%; transform:translateX(-50%);
-  border-radius:50% 50% 0 0 / 100% 100% 0 0;
-  border:2.5px solid; border-bottom:none;
-}
-.brick-xl { width:46px; height:54px; font-size:22px; }
-.brick-xl .stud { width:16px; height:9px; }
-.brick-lg { width:38px; height:46px; font-size:18px; }
-.brick-lg .stud { width:13px; height:8px; }
-.brick-md { width:31px; height:38px; font-size:15px; }
-.brick-md .stud { width:11px; height:7px; top:-7px; }
-.brick-sm { width:25px; height:31px; font-size:11px; }
-.brick-sm .stud { width:9px; height:6px; top:-6px; }
-.brick-xs { width:20px; height:25px; font-size:9px; }
-.brick-xs .stud { width:7px; height:4px; top:-5px; }
-
-.description-text {
-  font-size:13px; text-align:center; max-width:530px;
-  line-height:1.6; margin:1px 0;
-}
-
-/* ══ STAT CHIPS (time + set) ══ */
-.stats-row { display:flex; align-items:center; gap:12px; justify-content:center; margin:1px 0; }
-.stat-chip {
-  display:none; align-items:center; gap:7px;
-  border-radius:20px; padding:5px 16px; border:2.5px solid;
-  font-family:'Fredoka One',cursive; font-size:14px; white-space:nowrap;
-}
-.stat-icon { font-size:15px; }
-
-/* ══ AGE BADGE ══ */
-.age-badge {
-  display:none; align-items:center; gap:5px;
-  border-radius:16px; padding:3px 16px; border:2px solid;
-  font-family:'Fredoka One',cursive; font-size:12px; letter-spacing:0.5px;
-}
-
-/* ══ MINI BRICKS ROW ══ */
-.bricks-row { display:flex; gap:5px; justify-content:center; flex-wrap:wrap; margin:1px 0; }
-.mini-brick {
-  display:inline-flex; align-items:center; justify-content:center;
-  width:46px; height:23px; border-radius:3px;
-  border:1.5px solid rgba(0,0,0,0.2); box-shadow:0 2px 0 rgba(0,0,0,0.2); gap:4px;
-}
-.mini-brick .s {
-  width:7px; height:7px; border-radius:50%;
-  background:rgba(255,255,255,0.35); border:1px solid rgba(0,0,0,0.12);
-}
-
-/* ══ SIGNATURE + DATE ══ */
-.sig-section {
-  width:100%; display:flex; align-items:flex-end;
-  justify-content:space-between; gap:16px;
-}
-.sig-block { display:flex; flex-direction:column; align-items:center; gap:2px; }
-.sig-canvas-wrap { position:relative; width:180px; height:44px; cursor:crosshair; }
-.sig-canvas-wrap canvas { border-bottom:2px solid #888; cursor:crosshair; display:block; }
-.sig-clear-btn {
-  position:absolute; top:2px; right:0;
-  font-size:9px; background:rgba(0,0,0,0.1); border:none;
-  border-radius:3px; padding:2px 4px; cursor:pointer; color:#999;
-}
-.sig-clear-btn:hover { background:rgba(180,0,0,0.15); color:#a00; }
-.sig-label-input {
-  border:none; border-bottom:1px dashed #bbb; background:transparent;
-  font-family:'Nunito',sans-serif; font-size:10px; color:#888;
-  text-align:center; width:180px; letter-spacing:1px;
-  text-transform:uppercase; outline:none;
-}
-.sig-label-input:focus { border-bottom-color:#f7b731; }
-.date-block { display:none; flex-direction:column; align-items:flex-end; gap:2px; }
-.date-label-text {
-  font-size:10px; font-weight:700; letter-spacing:1px;
-  text-transform:uppercase; color:#aaa;
-}
-.date-value {
-  font-family:'Fredoka One',cursive; font-size:14px;
-  white-space:nowrap;
-}
+.header-row{display:flex;align-items:center;gap:13px;}
+.lego-badge{font-family:'Fredoka One',cursive;font-size:34px;letter-spacing:3px;border-radius:8px;padding:3px 18px;border:4px solid;line-height:1.2;flex-shrink:0;}
+.cert-title-line{font-family:'Fredoka One',cursive;font-size:26px;letter-spacing:1px;text-align:center;}
+.stars-line{font-size:19px;letter-spacing:4px;margin-top:2px;text-align:center;}
+.presented-block{border-radius:13px;padding:10px 28px 8px;text-align:center;position:relative;width:100%;max-width:660px;border:3px solid;}
+.presented-block::before{content:'';position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:22px;height:11px;border-radius:50% 50% 0 0 / 100% 100% 0 0;border:3px solid;border-bottom:none;}
+.presented-label{font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;}
+.lego-text-name{display:flex;justify-content:center;align-items:center;gap:3px;margin:4px 0 2px;width:100%;overflow:hidden;}
+.lego-letter{display:inline-flex;flex-direction:column;align-items:center;justify-content:flex-end;border-radius:4px;border:2.5px solid;position:relative;font-family:'Fredoka One',cursive;padding-bottom:3px;flex-shrink:0;}
+.lego-letter .stud{position:absolute;top:-8px;left:50%;transform:translateX(-50%);border-radius:50% 50% 0 0 / 100% 100% 0 0;border:2.5px solid;border-bottom:none;}
+.brick-xl{width:46px;height:54px;font-size:22px;} .brick-xl .stud{width:16px;height:9px;}
+.brick-lg{width:38px;height:46px;font-size:18px;} .brick-lg .stud{width:13px;height:8px;}
+.brick-md{width:31px;height:38px;font-size:15px;} .brick-md .stud{width:11px;height:7px;top:-7px;}
+.brick-sm{width:25px;height:31px;font-size:11px;} .brick-sm .stud{width:9px;height:6px;top:-6px;}
+.brick-xs{width:20px;height:25px;font-size:9px;}  .brick-xs .stud{width:7px;height:4px;top:-5px;}
+.description-text{font-size:13px;text-align:center;max-width:530px;line-height:1.6;margin:1px 0;}
+.stats-row{display:flex;align-items:center;gap:12px;justify-content:center;margin:1px 0;flex-wrap:wrap;}
+.stat-chip{display:none;align-items:center;gap:7px;border-radius:20px;padding:5px 16px;border:2.5px solid;font-family:'Fredoka One',cursive;font-size:14px;white-space:nowrap;}
+.stat-icon{font-size:15px;}
+.age-badge{display:none;align-items:center;gap:5px;border-radius:16px;padding:3px 16px;border:2px solid;font-family:'Fredoka One',cursive;font-size:12px;letter-spacing:.5px;}
+.bricks-row{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin:1px 0;}
+.mini-brick{display:inline-flex;align-items:center;justify-content:center;width:46px;height:23px;border-radius:3px;border:1.5px solid rgba(0,0,0,.2);box-shadow:0 2px 0 rgba(0,0,0,.2);gap:4px;}
+.mini-brick .s{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);border:1px solid rgba(0,0,0,.12);}
+.sig-section{width:100%;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;}
+.sig-block{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.sig-canvas-wrap{position:relative;width:180px;height:44px;cursor:crosshair;}
+.sig-canvas-wrap canvas{border-bottom:2px solid #888;cursor:crosshair;display:block;}
+.sig-clear-btn{position:absolute;top:2px;right:0;font-size:9px;background:rgba(0,0,0,.1);border:none;border-radius:3px;padding:2px 4px;cursor:pointer;color:#999;}
+.sig-clear-btn:hover{background:rgba(180,0,0,.15);color:#a00;}
+.sig-label-input{border:none;border-bottom:1px dashed #bbb;background:transparent;font-family:'Nunito',sans-serif;font-size:10px;color:#888;text-align:center;width:180px;letter-spacing:1px;text-transform:uppercase;outline:none;}
+.sig-label-input:focus{border-bottom-color:var(--accent);}
+.date-block{display:none;flex-direction:column;align-items:flex-end;gap:2px;}
+.date-label-text{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#aaa;}
+.date-value{font-family:'Fredoka One',cursive;font-size:14px;white-space:nowrap;}
+.cert-footer{width:100%;display:flex;justify-content:center;margin-top:1px;}
+.cert-serial{display:none;font-size:9px;font-family:'Nunito',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.32;}
 
 /* ══ THEMES ══ */
-/* --- Classic --- */
-.t-classic { background:#fff; }
-.t-classic .cert-content { background:linear-gradient(155deg,#fffde4 0%,#fff 45%,#e8f4ff 100%); border:2px dashed #ddd; }
-.t-classic .org-pill      { color:#1a5276; border-color:#1a5276; background:#fff; }
-.t-classic .lego-badge    { background:#e3001b; color:#fff; border-color:#a00013; box-shadow:0 4px 0 #700009; }
-.t-classic .cert-title-line { color:#f7b731; -webkit-text-stroke:1.5px #c77d0e; }
-.t-classic .stars-line    { color:#e3001b; }
-.t-classic .presented-block { background:#fff8e1; border-color:#f7b731; }
-.t-classic .presented-block::before { background:#f7b731; border-color:#c77d0e; }
-.t-classic .presented-label { color:#666; }
-.t-classic .description-text { color:#333; }
-.t-classic .lego-letter   { color:#111; }
-.t-classic .stat-chip     { border-color:#f7b731; background:#fff8e1; color:#7a4a00; }
-.t-classic .age-badge     { border-color:#e3001b; background:#fff0f0; color:#a00013; }
-.t-classic .date-value    { color:#555; }
-.t-classic .date-label-text { color:#aaa; }
-/* --- Speed --- */
-.t-speed { background:#111; }
-.t-speed .cert-content { background:linear-gradient(155deg,#1c1400 0%,#0e0e0e 50%,#001400 100%); border:2px solid #f7b731; }
-.t-speed .org-pill      { color:#f7b731; border-color:#f7b731; background:rgba(247,183,49,0.08); }
-.t-speed .lego-badge    { background:#f7b731; color:#111; border-color:#c77d0e; box-shadow:0 4px 0 #7a4800; }
-.t-speed .cert-title-line { color:#f7b731; -webkit-text-stroke:1px #c77d0e; }
-.t-speed .stars-line    { color:#e3001b; }
-.t-speed .presented-block { background:rgba(247,183,49,0.06); border-color:#f7b731; }
-.t-speed .presented-block::before { background:#f7b731; border-color:#c77d0e; }
-.t-speed .presented-label { color:#f7b731; }
-.t-speed .description-text { color:#ddd; }
-.t-speed .lego-letter   { color:#111; }
-.t-speed .stat-chip     { border-color:#f7b731; background:rgba(247,183,49,0.08); color:#f7b731; }
-.t-speed .age-badge     { border-color:#e3001b; background:rgba(227,0,27,0.1); color:#ff5555; }
-.t-speed .sig-label-input { color:#f7b731; }
-.t-speed .date-value    { color:#f7b731; }
-.t-speed .date-label-text { color:#888; }
-/* --- Space --- */
-.t-space { background:#050a1a; }
-.t-space .cert-content { background:radial-gradient(ellipse at 30% 20%,#0a1a40 0%,#050a1a 70%); border:2px solid #1a3a7a; }
-.t-space .org-pill      { color:#7ecfff; border-color:#7ecfff; background:rgba(126,207,255,0.08); }
-.t-space .lego-badge    { background:#0a2463; color:#7ecfff; border-color:#1a4a9a; box-shadow:0 4px 0 #050f2e; }
-.t-space .cert-title-line { color:#7ecfff; -webkit-text-stroke:1px #2255aa; }
-.t-space .stars-line    { color:#ffe566; }
-.t-space .presented-block { background:rgba(126,207,255,0.05); border-color:#1a4a9a; }
-.t-space .presented-block::before { background:#0a2463; border-color:#7ecfff; }
-.t-space .presented-label { color:#7ecfff; }
-.t-space .description-text { color:#aaccee; }
-.t-space .stat-chip     { border-color:#1a4a9a; background:rgba(126,207,255,0.07); color:#7ecfff; }
-.t-space .age-badge     { border-color:#7ecfff; background:rgba(126,207,255,0.08); color:#7ecfff; }
-.t-space .sig-label-input { color:#7ecfff; }
-.t-space .date-value    { color:#7ecfff; }
-.t-space .date-label-text { color:#5588bb; }
-/* --- Nature --- */
-.t-nature { background:#f0f7ee; }
-.t-nature .cert-content { background:linear-gradient(140deg,#e8f5e0 0%,#f5fff2 50%,#e0f0e8 100%); border:2px solid #a8d5a2; }
-.t-nature .org-pill      { color:#2d6a4f; border-color:#2d6a4f; background:#fff; }
-.t-nature .lego-badge    { background:#2d6a4f; color:#fff; border-color:#1b4332; box-shadow:0 4px 0 #0d2b1e; }
-.t-nature .cert-title-line { color:#52b788; -webkit-text-stroke:1px #2d6a4f; }
-.t-nature .stars-line    { color:#f4a261; }
-.t-nature .presented-block { background:#f0faf0; border-color:#74c69d; }
-.t-nature .presented-block::before { background:#74c69d; border-color:#52b788; }
-.t-nature .presented-label { color:#555; }
-.t-nature .description-text { color:#3a5a40; }
-.t-nature .stat-chip     { border-color:#74c69d; background:#e8f5e0; color:#2d6a4f; }
-.t-nature .age-badge     { border-color:#2d6a4f; background:#e8f5e0; color:#2d6a4f; }
-.t-nature .date-value    { color:#3a5a40; }
-.t-nature .date-label-text { color:#888; }
-/* --- Royal --- */
-.t-royal { background:#1a0a2e; }
-.t-royal .cert-content { background:linear-gradient(155deg,#1e0a38 0%,#120520 50%,#1a0a2e 100%); border:2px solid #7b2d8b; }
-.t-royal .org-pill      { color:#d4a017; border-color:#d4a017; background:rgba(212,160,23,0.1); }
-.t-royal .lego-badge    { background:#7b2d8b; color:#f5d060; border-color:#5a1e68; box-shadow:0 4px 0 #3a0f46; }
-.t-royal .cert-title-line { color:#f5d060; -webkit-text-stroke:1px #c9960a; }
-.t-royal .stars-line    { color:#f5d060; }
-.t-royal .presented-block { background:rgba(212,160,23,0.07); border-color:#7b2d8b; }
-.t-royal .presented-block::before { background:#7b2d8b; border-color:#d4a017; }
-.t-royal .presented-label { color:#d4a017; }
-.t-royal .description-text { color:#c8a8e0; }
-.t-royal .stat-chip     { border-color:#7b2d8b; background:rgba(212,160,23,0.07); color:#d4a017; }
-.t-royal .age-badge     { border-color:#d4a017; background:rgba(212,160,23,0.07); color:#d4a017; }
-.t-royal .sig-label-input { color:#d4a017; }
-.t-royal .date-value    { color:#d4a017; }
-.t-royal .date-label-text { color:#7b5a9a; }
-/* --- Sunshine --- */
-.t-sunshine { background:#fff9f0; }
-.t-sunshine .cert-content { background:linear-gradient(145deg,#fff3d4 0%,#fff9f0 40%,#ffe8cc 100%); border:2px dashed #f4a261; }
-.t-sunshine .org-pill      { color:#e07b00; border-color:#e07b00; background:#fff; }
-.t-sunshine .lego-badge    { background:#e07b00; color:#fff; border-color:#a85800; box-shadow:0 4px 0 #6b3800; }
-.t-sunshine .cert-title-line { color:#e07b00; -webkit-text-stroke:1.5px #a85800; }
-.t-sunshine .stars-line    { color:#e3001b; }
-.t-sunshine .presented-block { background:#fff3d4; border-color:#f4a261; }
-.t-sunshine .presented-block::before { background:#f4a261; border-color:#e07b00; }
-.t-sunshine .presented-label { color:#7a4a00; }
-.t-sunshine .description-text { color:#5a3500; }
-.t-sunshine .stat-chip     { border-color:#f4a261; background:#fff3d4; color:#7a4a00; }
-.t-sunshine .age-badge     { border-color:#e07b00; background:#fff3d4; color:#7a4a00; }
-.t-sunshine .date-value    { color:#c08040; }
-.t-sunshine .date-label-text { color:#c08040; }
+.t-classic{background:#fff;}
+.t-classic .cert-content{background:linear-gradient(155deg,#fffde4 0%,#fff 45%,#e8f4ff 100%);border:2px dashed #ddd;}
+.t-classic .org-pill{color:#1a5276;border-color:#1a5276;background:#fff;}
+.t-classic .lego-badge{background:#e3001b;color:#fff;border-color:#a00013;box-shadow:0 4px 0 #700009;}
+.t-classic .cert-title-line{color:#f7b731;-webkit-text-stroke:1.5px #c77d0e;}
+.t-classic .stars-line{color:#e3001b;}
+.t-classic .presented-block{background:#fff8e1;border-color:#f7b731;}
+.t-classic .presented-block::before{background:#f7b731;border-color:#c77d0e;}
+.t-classic .presented-label{color:#666;}
+.t-classic .description-text{color:#333;}
+.t-classic .lego-letter{color:#111;}
+.t-classic .stat-chip{border-color:#f7b731;background:#fff8e1;color:#7a4a00;}
+.t-classic .age-badge{border-color:#e3001b;background:#fff0f0;color:#a00013;}
+.t-classic .date-value{color:#555;} .t-classic .date-label-text{color:#aaa;}
+.t-classic .cert-serial{color:#555;}
+.t-speed{background:#111;}
+.t-speed .cert-content{background:linear-gradient(155deg,#1c1400 0%,#0e0e0e 50%,#001400 100%);border:2px solid #f7b731;}
+.t-speed .org-pill{color:#f7b731;border-color:#f7b731;background:rgba(247,183,49,.08);}
+.t-speed .lego-badge{background:#f7b731;color:#111;border-color:#c77d0e;box-shadow:0 4px 0 #7a4800;}
+.t-speed .cert-title-line{color:#f7b731;-webkit-text-stroke:1px #c77d0e;}
+.t-speed .stars-line{color:#e3001b;}
+.t-speed .presented-block{background:rgba(247,183,49,.06);border-color:#f7b731;}
+.t-speed .presented-block::before{background:#f7b731;border-color:#c77d0e;}
+.t-speed .presented-label{color:#f7b731;} .t-speed .description-text{color:#ddd;}
+.t-speed .lego-letter{color:#111;}
+.t-speed .stat-chip{border-color:#f7b731;background:rgba(247,183,49,.08);color:#f7b731;}
+.t-speed .age-badge{border-color:#e3001b;background:rgba(227,0,27,.1);color:#ff5555;}
+.t-speed .sig-label-input{color:#f7b731;} .t-speed .date-value{color:#f7b731;} .t-speed .date-label-text{color:#888;}
+.t-speed .cert-serial{color:#f7b731;}
+.t-space{background:#050a1a;}
+.t-space .cert-content{background:radial-gradient(ellipse at 30% 20%,#0a1a40 0%,#050a1a 70%);border:2px solid #1a3a7a;}
+.t-space .org-pill{color:#7ecfff;border-color:#7ecfff;background:rgba(126,207,255,.08);}
+.t-space .lego-badge{background:#0a2463;color:#7ecfff;border-color:#1a4a9a;box-shadow:0 4px 0 #050f2e;}
+.t-space .cert-title-line{color:#7ecfff;-webkit-text-stroke:1px #2255aa;}
+.t-space .stars-line{color:#ffe566;}
+.t-space .presented-block{background:rgba(126,207,255,.05);border-color:#1a4a9a;}
+.t-space .presented-block::before{background:#0a2463;border-color:#7ecfff;}
+.t-space .presented-label{color:#7ecfff;} .t-space .description-text{color:#aaccee;}
+.t-space .stat-chip{border-color:#1a4a9a;background:rgba(126,207,255,.07);color:#7ecfff;}
+.t-space .age-badge{border-color:#7ecfff;background:rgba(126,207,255,.08);color:#7ecfff;}
+.t-space .sig-label-input{color:#7ecfff;} .t-space .date-value{color:#7ecfff;} .t-space .date-label-text{color:#5588bb;}
+.t-space .cert-serial{color:#7ecfff;}
+.t-nature{background:#f0f7ee;}
+.t-nature .cert-content{background:linear-gradient(140deg,#e8f5e0 0%,#f5fff2 50%,#e0f0e8 100%);border:2px solid #a8d5a2;}
+.t-nature .org-pill{color:#2d6a4f;border-color:#2d6a4f;background:#fff;}
+.t-nature .lego-badge{background:#2d6a4f;color:#fff;border-color:#1b4332;box-shadow:0 4px 0 #0d2b1e;}
+.t-nature .cert-title-line{color:#52b788;-webkit-text-stroke:1px #2d6a4f;}
+.t-nature .stars-line{color:#f4a261;}
+.t-nature .presented-block{background:#f0faf0;border-color:#74c69d;}
+.t-nature .presented-block::before{background:#74c69d;border-color:#52b788;}
+.t-nature .presented-label{color:#555;} .t-nature .description-text{color:#3a5a40;}
+.t-nature .stat-chip{border-color:#74c69d;background:#e8f5e0;color:#2d6a4f;}
+.t-nature .age-badge{border-color:#2d6a4f;background:#e8f5e0;color:#2d6a4f;}
+.t-nature .date-value{color:#3a5a40;} .t-nature .date-label-text{color:#888;}
+.t-nature .cert-serial{color:#3a5a40;}
+.t-royal{background:#1a0a2e;}
+.t-royal .cert-content{background:linear-gradient(155deg,#1e0a38 0%,#120520 50%,#1a0a2e 100%);border:2px solid #7b2d8b;}
+.t-royal .org-pill{color:#d4a017;border-color:#d4a017;background:rgba(212,160,23,.1);}
+.t-royal .lego-badge{background:#7b2d8b;color:#f5d060;border-color:#5a1e68;box-shadow:0 4px 0 #3a0f46;}
+.t-royal .cert-title-line{color:#f5d060;-webkit-text-stroke:1px #c9960a;}
+.t-royal .stars-line{color:#f5d060;}
+.t-royal .presented-block{background:rgba(212,160,23,.07);border-color:#7b2d8b;}
+.t-royal .presented-block::before{background:#7b2d8b;border-color:#d4a017;}
+.t-royal .presented-label{color:#d4a017;} .t-royal .description-text{color:#c8a8e0;}
+.t-royal .stat-chip{border-color:#7b2d8b;background:rgba(212,160,23,.07);color:#d4a017;}
+.t-royal .age-badge{border-color:#d4a017;background:rgba(212,160,23,.07);color:#d4a017;}
+.t-royal .sig-label-input{color:#d4a017;} .t-royal .date-value{color:#d4a017;} .t-royal .date-label-text{color:#7b5a9a;}
+.t-royal .cert-serial{color:#d4a017;}
+.t-sunshine{background:#fff9f0;}
+.t-sunshine .cert-content{background:linear-gradient(145deg,#fff3d4 0%,#fff9f0 40%,#ffe8cc 100%);border:2px dashed #f4a261;}
+.t-sunshine .org-pill{color:#e07b00;border-color:#e07b00;background:#fff;}
+.t-sunshine .lego-badge{background:#e07b00;color:#fff;border-color:#a85800;box-shadow:0 4px 0 #6b3800;}
+.t-sunshine .cert-title-line{color:#e07b00;-webkit-text-stroke:1.5px #a85800;}
+.t-sunshine .stars-line{color:#e3001b;}
+.t-sunshine .presented-block{background:#fff3d4;border-color:#f4a261;}
+.t-sunshine .presented-block::before{background:#f4a261;border-color:#e07b00;}
+.t-sunshine .presented-label{color:#7a4a00;} .t-sunshine .description-text{color:#5a3500;}
+.t-sunshine .stat-chip{border-color:#f4a261;background:#fff3d4;color:#7a4a00;}
+.t-sunshine .age-badge{border-color:#e07b00;background:#fff3d4;color:#7a4a00;}
+.t-sunshine .date-value{color:#c08040;} .t-sunshine .date-label-text{color:#c08040;}
+.t-sunshine .cert-serial{color:#c08040;}
 
 /* ══ PRINT ══ */
-@media print {
-  @page { size:11in 8.5in landscape; margin:0; }
-  body { background:#fff !important; }
-  #control-panel, #selector-bar { display:none !important; }
-  #cert-area { padding:0 !important; display:block !important; }
-  .page {
-    width:11in !important; height:8.5in !important;
-    box-shadow:none !important; border-radius:0 !important;
-    overflow:visible !important;
-  }
-  #brick-canvas { width:11in !important; height:8.5in !important; }
-  .sig-clear-btn { display:none !important; }
-  * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+@media print{
+  @page{size:11in 8.5in landscape;margin:0;}
+  body{background:#fff !important;display:block;height:auto;overflow:visible;}
+  #topbar,#sidebar{display:none !important;}
+  #layout{display:block;}
+  #cert-area{padding:0 !important;display:block !important;overflow:visible;}
+  #cert-zoom-outer{transform:none !important;}
+  .page{width:11in !important;height:8.5in !important;box-shadow:none !important;border-radius:0 !important;overflow:visible !important;}
+  #brick-canvas{width:11in !important;height:8.5in !important;}
+  .sig-clear-btn{display:none !important;}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
 }
 </style>
 </head>
 <body>
 
-<!-- ══ CONTROL PANEL ══ -->
-<div id="control-panel">
-  <h1>⚡ Speed Build Cert</h1>
+<!-- ══ TOP BAR ══ -->
+<header id="topbar">
+  <div class="brand">⚡ Speed Build</div>
+  <div class="top-sep"></div>
+  <div class="zoom-wrap">
+    <label>Zoom</label>
+    <input type="range" id="zoom-slider" min="55" max="100" value="82"
+      oninput="applyZoom(this.value)" style="--pct:52%">
+    <span id="zoom-val">82%</span>
+  </div>
+  <div class="top-sep"></div>
+  <div id="ready-badge">Ready to print!</div>
+  <div class="top-btns">
+    <button class="icon-btn" onclick="resetAll()">↺ Reset</button>
+    <button class="print-btn" onclick="window.print()">🖨️ Print / PDF</button>
+  </div>
+</header>
 
-  <div class="ctrl-group">
-    <label>👤 Name</label>
-    <input type="text" id="name-input" class="w-name" value="YOUR NAME" maxlength="24" placeholder="Type name…">
-  </div>
-  <div class="ctrl-group">
-    <label>🥇 Place</label>
-    <input type="text" id="placement-input" class="w-narrow" maxlength="5" placeholder="1st">
-  </div>
-  <div class="ctrl-group">
-    <label>⏱️ Time</label>
-    <input type="text" id="time-input" class="w-narrow" maxlength="8" placeholder="2:34">
-  </div>
-  <div class="ctrl-group">
-    <label>🧱 Build</label>
-    <input type="text" id="set-input" class="w-mid" maxlength="22" placeholder="Fire Station">
-  </div>
-  <div class="ctrl-group">
-    <label>👶 Ages</label>
-    <input type="text" id="age-input" class="w-narrow" maxlength="10" placeholder="5–6">
-  </div>
-  <div class="ctrl-group">
-    <label>📅 Date</label>
-    <input type="text" id="date-input" class="w-mid" maxlength="18" placeholder="May 3, 2025">
-  </div>
-  <div class="ctrl-group">
-    <label>📋 Title</label>
-    <input type="text" id="title-input" class="w-wide" maxlength="40" placeholder="Speed Build Challenge">
-  </div>
-  <div class="ctrl-group">
-    <label>🏢 Org</label>
-    <input type="text" id="org-input" class="w-wide" maxlength="42" value="Islamic Center of Brushy Creek">
-  </div>
+<!-- ══ MAIN LAYOUT ══ -->
+<div id="layout">
 
-  <button class="print-btn" onclick="window.print()">🖨️ Print / PDF</button>
-</div>
+<!-- ══ SIDEBAR ══ -->
+<aside id="sidebar">
 
-<!-- ══ SELECTOR BAR ══ -->
-<div id="selector-bar">
-
-  <div class="sel-group">
-    <div class="sel-label">🎨 Theme</div>
-    <div class="pills">
-      <button class="theme-pill active" data-theme="classic"  style="background:#e3001b">🔴 Classic</button>
-      <button class="theme-pill"        data-theme="speed"    style="background:#c77d0e">⚡ Speed</button>
-      <button class="theme-pill"        data-theme="space"    style="background:#0a2463">🚀 Space</button>
-      <button class="theme-pill"        data-theme="nature"   style="background:#2d6a4f">🌿 Nature</button>
-      <button class="theme-pill"        data-theme="royal"    style="background:#7b2d8b">👑 Royal</button>
-      <button class="theme-pill"        data-theme="sunshine" style="background:#e07b00">☀️ Shine</button>
+  <!-- ① Quick Presets -->
+  <div class="sec open" data-sec="presets">
+    <div class="sec-hd" onclick="toggleSec(this)">
+      <span class="ico">⚡</span><span class="lbl">Quick Presets</span><span class="arrow">▼</span>
     </div>
-  </div>
-
-  <div class="sel-group">
-    <div class="sel-label">🏗️ Layout (20)</div>
-    <div class="pills">
-      <button class="layout-pill active" data-layout="full">⬛ Full Border</button>
-      <button class="layout-pill" data-layout="top-bottom">▬ Top &amp; Bottom</button>
-      <button class="layout-pill" data-layout="sides">◀▶ Sides</button>
-      <button class="layout-pill" data-layout="top-only">▀ Top Only</button>
-      <button class="layout-pill" data-layout="bottom-only">▄ Bottom Only</button>
-      <button class="layout-pill" data-layout="corners">🔲 Corners</button>
-      <button class="layout-pill" data-layout="thick-top">▬▬ Thick Top</button>
-      <button class="layout-pill" data-layout="double-border">⬜⬛ Double</button>
-      <button class="layout-pill" data-layout="checkerboard">♟ Checker</button>
-      <button class="layout-pill" data-layout="rainbow">🌈 Rainbow</button>
-      <button class="layout-pill" data-layout="zigzag">〰 Zigzag</button>
-      <button class="layout-pill" data-layout="staircase">📶 Staircase</button>
-      <button class="layout-pill" data-layout="diagonal-tl">╲ Diagonal TL</button>
-      <button class="layout-pill" data-layout="diagonal-tr">╱ Diagonal TR</button>
-      <button class="layout-pill" data-layout="arch">🏛 Arch</button>
-      <button class="layout-pill" data-layout="diamond">◆ Diamond</button>
-      <button class="layout-pill" data-layout="scattered">✦ Scattered</button>
-      <button class="layout-pill" data-layout="wave">〜 Wave</button>
-      <button class="layout-pill" data-layout="left-accent">◧ Left Accent</button>
-      <button class="layout-pill" data-layout="cross">✛ Cross</button>
-    </div>
-  </div>
-
-</div>
-
-<!-- ══ CERTIFICATE ══ -->
-<div id="cert-area">
-<div class="page t-classic" id="the-page">
-
-  <canvas id="brick-canvas" width="960" height="680"></canvas>
-
-  <!-- Placement badge — shown only when Place field is filled -->
-  <div class="placement-badge" id="placement-badge">
-    <div class="placement-num" id="placement-num">1st</div>
-    <div class="placement-label">PLACE</div>
-    <div class="placement-stars">⭐⭐⭐</div>
-  </div>
-
-  <div class="cert-content" id="cert-content">
-
-    <!-- Org name pill -->
-    <div class="org-pill" id="org-display">Islamic Center of Brushy Creek</div>
-
-    <!-- Title row -->
-    <div class="header-row">
-      <div class="lego-badge">LEGO</div>
-      <div>
-        <div class="cert-title-line" id="cert-title">Certificate of Achievement</div>
-        <div class="stars-line" id="stars-line">⚡ ⭐ ⚡ ⭐ ⚡</div>
+    <div class="sec-body">
+      <div class="presets-grid">
+        <button class="preset-btn pb-gold"   onclick="applyPreset('1st')">🥇 1st Place</button>
+        <button class="preset-btn pb-silver" onclick="applyPreset('2nd')">🥈 2nd Place</button>
+        <button class="preset-btn pb-bronze" onclick="applyPreset('3rd')">🥉 3rd Place</button>
+        <button class="preset-btn pb-part"   onclick="applyPreset('part')">🎖️ Participant</button>
       </div>
     </div>
+  </div>
 
-    <!-- Presented-to block -->
-    <div class="presented-block">
-      <div class="presented-label">This certificate is proudly presented to:</div>
-      <div class="lego-text-name" id="name-bricks"></div>
+  <!-- ② The Winner -->
+  <div class="sec open" data-sec="winner">
+    <div class="sec-hd" onclick="toggleSec(this)">
+      <span class="ico">🏅</span><span class="lbl">The Winner</span><span class="arrow">▼</span>
     </div>
-
-    <!-- Description -->
-    <p class="description-text" id="desc-text">
-      For Participating In ICBC's 2026 Lego Competition!
-    </p>
-
-    <!-- Stats row — time chip and/or set chip, shown only when filled -->
-    <div class="stats-row" id="stats-row">
-      <div class="stat-chip" id="time-chip">
-        <span class="stat-icon">⏱️</span>
-        <span>Time: </span>
-        <span id="time-display"></span>
+    <div class="sec-body">
+      <div class="field">
+        <label>Who's it for? <span class="char-ct" id="name-chars">0 / 24</span></label>
+        <input type="text" id="name-input" maxlength="24" placeholder="e.g. Ahmed Khan"
+          oninput="buildNameBricks(this.value);updateCharCount(this.value,'name-chars',24);markFilled(this)">
       </div>
-      <div class="stat-chip" id="set-chip">
-        <span class="stat-icon">🧱</span>
-        <span>Built: </span>
-        <span id="set-display"></span>
+      <div class="field">
+        <label>🥇 Placement <span style="color:var(--dim);font-size:9px;text-transform:none">(blank = participation)</span></label>
+        <input type="text" id="placement-input" maxlength="5" placeholder="1st, 2nd, 3rd…"
+          oninput="updatePlacement(this.value);markFilled(this)">
+      </div>
+      <!-- Multiple names -->
+      <div class="multi-header">Batch mode — paste names</div>
+      <div class="field">
+        <label>Names list <span style="font-size:9px;text-transform:none;color:var(--dim)">comma-separated</span></label>
+        <textarea id="names-list" placeholder="Ahmed, Sara, Yusuf, Aisha…" oninput="parseNamesList(this.value)"></textarea>
+      </div>
+      <div class="name-nav">
+        <button class="nav-btn" id="name-prev" onclick="stepName(-1)" disabled>‹</button>
+        <span class="name-ct" id="name-ct">—</span>
+        <button class="nav-btn" id="name-next" onclick="stepName(1)" disabled>›</button>
       </div>
     </div>
+  </div>
 
-    <!-- Age badge — shown only when filled -->
-    <div class="age-badge" id="age-badge">
-      <span>👶</span>
-      <span id="age-display"></span>
+  <!-- ③ The Certificate -->
+  <div class="sec" data-sec="cert">
+    <div class="sec-hd" onclick="toggleSec(this)">
+      <span class="ico">📜</span><span class="lbl">The Certificate</span><span class="arrow">▼</span>
+    </div>
+    <div class="sec-body">
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="title-input" maxlength="40" placeholder="Speed Build Challenge"
+          oninput="updateTitle(this.value);markFilled(this)">
+      </div>
+      <div class="field">
+        <label>Organisation</label>
+        <input type="text" id="org-input" maxlength="42" value="Islamic Center of Brushy Creek"
+          oninput="updateOrg(this.value)">
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea id="desc-input" maxlength="200" placeholder="For completing the LEGO Speed Build Challenge…"
+          oninput="updateDesc(this.value);markFilled(this)"></textarea>
+      </div>
+      <div class="field">
+        <label>Stars / emoji row</label>
+        <input type="text" id="stars-input" maxlength="30" placeholder="⚡ ⭐ ⚡ ⭐ ⚡"
+          oninput="updateStars(this.value)">
+      </div>
+      <div class="field">
+        <label>Certificate #</label>
+        <input type="text" id="certnum-input" maxlength="10" placeholder="001"
+          oninput="updateCertNum(this.value);markFilled(this)">
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ Race Details -->
+  <div class="sec" data-sec="race">
+    <div class="sec-hd" onclick="toggleSec(this)">
+      <span class="ico">🏁</span><span class="lbl">Race Details</span><span class="arrow">▼</span>
+    </div>
+    <div class="sec-body">
+      <div class="field">
+        <label>⏱️ Finish time</label>
+        <input type="text" id="time-input" maxlength="10" placeholder="2 min 34 sec"
+          oninput="updateStats();markFilled(this)">
+      </div>
+      <div class="field">
+        <label>🧱 What they built</label>
+        <input type="text" id="set-input" maxlength="22" placeholder="Fire Station"
+          oninput="updateStats();markFilled(this)">
+      </div>
+      <div class="field">
+        <label>👶 Age division</label>
+        <input type="text" id="age-input" maxlength="10" placeholder="5 – 6"
+          oninput="updateAge(this.value);markFilled(this)">
+      </div>
+      <div class="field">
+        <label>📅 Event date</label>
+        <input type="text" id="date-input" maxlength="18" placeholder="May 3, 2025"
+          oninput="updateDate(this.value);markFilled(this)">
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ Look & Feel -->
+  <div class="sec open" data-sec="look">
+    <div class="sec-hd" onclick="toggleSec(this)">
+      <span class="ico">🎨</span><span class="lbl">Look & Feel</span><span class="arrow">▼</span>
+    </div>
+    <div class="sec-body">
+      <div class="sec-sublabel">Theme</div>
+      <div class="pill-wrap" id="theme-pills">
+        <button class="t-pill active" data-theme="classic"  style="background:#e3001b">🔴 Classic</button>
+        <button class="t-pill"        data-theme="speed"    style="background:#c77d0e">⚡ Speed</button>
+        <button class="t-pill"        data-theme="space"    style="background:#0a2463">🚀 Space</button>
+        <button class="t-pill"        data-theme="nature"   style="background:#2d6a4f">🌿 Nature</button>
+        <button class="t-pill"        data-theme="royal"    style="background:#7b2d8b">👑 Royal</button>
+        <button class="t-pill"        data-theme="sunshine" style="background:#e07b00">☀️ Shine</button>
+      </div>
+      <div class="sec-sublabel" style="margin-top:10px">Border layout</div>
+      <div class="pill-wrap" id="layout-pills">
+        <button class="l-pill active" data-layout="full">⬛ Full</button>
+        <button class="l-pill" data-layout="top-bottom">▬ Top+Bot</button>
+        <button class="l-pill" data-layout="sides">◀▶ Sides</button>
+        <button class="l-pill" data-layout="top-only">▀ Top</button>
+        <button class="l-pill" data-layout="bottom-only">▄ Bottom</button>
+        <button class="l-pill" data-layout="corners">🔲 Corners</button>
+        <button class="l-pill" data-layout="thick-top">▬▬ Thick Top</button>
+        <button class="l-pill" data-layout="double-border">⬜ Double</button>
+        <button class="l-pill" data-layout="checkerboard">♟ Checker</button>
+        <button class="l-pill" data-layout="rainbow">🌈 Rainbow</button>
+        <button class="l-pill" data-layout="zigzag">〰 Zigzag</button>
+        <button class="l-pill" data-layout="staircase">📶 Staircase</button>
+        <button class="l-pill" data-layout="diagonal-tl">╲ Diag TL</button>
+        <button class="l-pill" data-layout="diagonal-tr">╱ Diag TR</button>
+        <button class="l-pill" data-layout="arch">🏛 Arch</button>
+        <button class="l-pill" data-layout="diamond">◆ Diamond</button>
+        <button class="l-pill" data-layout="scattered">✦ Scattered</button>
+        <button class="l-pill" data-layout="wave">〜 Wave</button>
+        <button class="l-pill" data-layout="left-accent">◧ L-Accent</button>
+        <button class="l-pill" data-layout="cross">✛ Cross</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑥ Decorations -->
+  <div class="sec" data-sec="deco">
+    <div class="sec-hd" onclick="toggleSec(this)">
+      <span class="ico">🎊</span><span class="lbl">Decorations</span><span class="arrow">▼</span>
+    </div>
+    <div class="sec-body">
+      <div class="toggle-row">
+        <span class="toggle-lbl">🏆 Trophy watermark</span>
+        <label class="tog">
+          <input type="checkbox" id="trophy-tog" onchange="toggleTrophy(this.checked)">
+          <div class="tog-track"></div><div class="tog-thumb"></div>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-lbl">✨ Sparkle accents</span>
+        <label class="tog">
+          <input type="checkbox" id="sparkle-tog" onchange="toggleSparkles(this.checked)">
+          <div class="tog-track"></div><div class="tog-thumb"></div>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-lbl">🧱 Show mini bricks row</span>
+        <label class="tog">
+          <input type="checkbox" id="minibricks-tog" onchange="toggleMiniBricks(this.checked)" checked>
+          <div class="tog-track"></div><div class="tog-thumb"></div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <button id="reset-btn" onclick="resetAll()">↺ Clear everything</button>
+
+</aside><!-- end sidebar -->
+
+<!-- ══ CERT AREA ══ -->
+<main id="cert-area">
+  <div id="cert-zoom-outer">
+  <div class="page t-classic" id="the-page">
+
+    <canvas id="brick-canvas" width="960" height="680"></canvas>
+
+    <!-- Placement badge -->
+    <div class="placement-badge" id="placement-badge">
+      <div class="placement-num" id="placement-num">1st</div>
+      <div class="placement-label">PLACE</div>
+      <div class="placement-stars">⭐⭐⭐</div>
     </div>
 
-    <!-- Mini bricks row -->
-    <div class="bricks-row">
-      <div class="mini-brick" id="mb0"><div class="s"></div><div class="s"></div></div>
-      <div class="mini-brick" id="mb1"><div class="s"></div><div class="s"></div></div>
-      <div class="mini-brick" id="mb2"><div class="s"></div><div class="s"></div></div>
-      <div class="mini-brick" id="mb3"><div class="s"></div><div class="s"></div></div>
-      <div class="mini-brick" id="mb4"><div class="s"></div><div class="s"></div></div>
-      <div class="mini-brick" id="mb5"><div class="s"></div><div class="s"></div></div>
-      <div class="mini-brick" id="mb6"><div class="s"></div><div class="s"></div></div>
-      <div class="mini-brick" id="mb7"><div class="s"></div><div class="s"></div></div>
+    <!-- Trophy watermark -->
+    <div class="trophy-wm" id="trophy-wm">🏆</div>
+
+    <!-- Sparkle accents -->
+    <div class="sparkle-wrap" id="sparkle-wrap">
+      <span class="spark" style="top:7%;left:6%">✦</span>
+      <span class="spark" style="top:7%;right:6%">✦</span>
+      <span class="spark" style="top:28%;left:3%">✦</span>
+      <span class="spark" style="top:28%;right:3%">✦</span>
+      <span class="spark" style="top:56%;left:2.5%">✦</span>
+      <span class="spark" style="top:56%;right:2.5%">✦</span>
+      <span class="spark" style="bottom:14%;left:6%">✦</span>
+      <span class="spark" style="bottom:14%;right:6%">✦</span>
+      <span class="spark" style="top:4%;left:25%">⭐</span>
+      <span class="spark" style="top:4%;right:25%">⭐</span>
+      <span class="spark" style="top:4%;left:50%;transform:translateX(-50%)">✦</span>
     </div>
 
-    <!-- Signature + date -->
-    <div class="sig-section">
-      <div class="sig-block">
-        <div class="sig-canvas-wrap">
-          <canvas id="sig1" width="180" height="44"></canvas>
-          <button class="sig-clear-btn" onclick="clearSig()">✕</button>
+    <div class="cert-content" id="cert-content">
+
+      <div class="org-pill" id="org-display">Islamic Center of Brushy Creek</div>
+
+      <div class="header-row">
+        <div class="lego-badge">LEGO</div>
+        <div>
+          <div class="cert-title-line" id="cert-title">Speed Build Challenge</div>
+          <div class="stars-line" id="stars-line">⚡ ⭐ ⚡ ⭐ ⚡</div>
         </div>
-        <input class="sig-label-input" type="text" value="Instructor Signature">
       </div>
-      <!-- Date block — shown only when filled -->
-      <div class="date-block" id="date-block">
-        <div class="date-label-text">Date</div>
-        <div class="date-value" id="date-display"></div>
-      </div>
-    </div>
 
-  </div><!-- end cert-content -->
-</div><!-- end page -->
-</div><!-- end cert-area -->
+      <div class="presented-block">
+        <div class="presented-label">This certificate is proudly presented to:</div>
+        <div class="lego-text-name" id="name-bricks"></div>
+      </div>
+
+      <p class="description-text" id="desc-text">
+        For completing the LEGO Speed Build Challenge with incredible skill and lightning-fast building! ⚡🧱
+      </p>
+
+      <div class="stats-row" id="stats-row">
+        <div class="stat-chip" id="time-chip">
+          <span class="stat-icon">⏱️</span><span>Time: </span><span id="time-display"></span>
+        </div>
+        <div class="stat-chip" id="set-chip">
+          <span class="stat-icon">🧱</span><span>Built: </span><span id="set-display"></span>
+        </div>
+      </div>
+
+      <div class="age-badge" id="age-badge">
+        <span>👶</span><span id="age-display"></span>
+      </div>
+
+      <div class="bricks-row" id="mini-bricks-row">
+        <div class="mini-brick" id="mb0"><div class="s"></div><div class="s"></div></div>
+        <div class="mini-brick" id="mb1"><div class="s"></div><div class="s"></div></div>
+        <div class="mini-brick" id="mb2"><div class="s"></div><div class="s"></div></div>
+        <div class="mini-brick" id="mb3"><div class="s"></div><div class="s"></div></div>
+        <div class="mini-brick" id="mb4"><div class="s"></div><div class="s"></div></div>
+        <div class="mini-brick" id="mb5"><div class="s"></div><div class="s"></div></div>
+        <div class="mini-brick" id="mb6"><div class="s"></div><div class="s"></div></div>
+        <div class="mini-brick" id="mb7"><div class="s"></div><div class="s"></div></div>
+      </div>
+
+      <div class="sig-section">
+        <div class="sig-block">
+          <div class="sig-canvas-wrap">
+            <canvas id="sig1" width="180" height="44"></canvas>
+            <button class="sig-clear-btn" onclick="clearSig()">✕</button>
+          </div>
+          <input class="sig-label-input" type="text" value="Instructor Signature">
+        </div>
+        <div class="date-block" id="date-block">
+          <div class="date-label-text">Date</div>
+          <div class="date-value" id="date-display"></div>
+        </div>
+      </div>
+
+      <div class="cert-footer">
+        <div class="cert-serial" id="cert-serial"></div>
+      </div>
+
+    </div><!-- cert-content -->
+  </div><!-- page -->
+  </div><!-- cert-zoom-outer -->
+</main>
+
+</div><!-- layout -->
 
 <script>
 // ══════════════════════════════════════════════════════════════
 // THEME DATA
 // ══════════════════════════════════════════════════════════════
 const THEMES = {
-  classic: {
-    cols: ['#e3001b','#006cb7','#f7b731','#00a650','#f47920','#9e2ca3','#1abc9c'],
-    darks:['#a00013','#004a8f','#c77d0e','#007836','#b55c0f','#6a1c70','#0e8a6e'],
-    sigCol:'#444', stars:'⭐ ⭐ ⭐ ⭐ ⭐',
-    title:'Speed Build Challenge',
-    desc:'For completing the LEGO Speed Build Challenge with incredible skill and lightning-fast building! ⚡🧱'
-  },
-  speed: {
-    cols: ['#f7b731','#e3001b','#ff6b35','#006cb7','#f7b731','#e3001b','#ff6b35'],
-    darks:['#c77d0e','#a00013','#cc4400','#004a8f','#c77d0e','#a00013','#cc4400'],
-    sigCol:'#f7b731', stars:'⚡ ⭐ ⚡ ⭐ ⚡',
-    title:'Speed Build Champion',
-    desc:'Fastest hands, biggest dreams — you crushed the LEGO Speed Build Challenge! ⚡🏆'
-  },
-  space: {
-    cols: ['#0a2463','#1a4a9a','#7ecfff','#ffe566','#3a8aee','#0d3b8e','#5aafee'],
-    darks:['#050f2e','#0a2463','#2a7aaa','#aa8800','#1a4a9a','#050f2e','#1a5a99'],
-    sigCol:'#7ecfff', stars:'✨ ⭐ ✨ ⭐ ✨',
-    title:'Space Builder Award',
-    desc:'For exploring the cosmos brick by brick — a true galactic speed builder! 🚀⭐'
-  },
-  nature: {
-    cols: ['#2d6a4f','#52b788','#74c69d','#f4a261','#a8d5a2','#1b4332','#40916c'],
-    darks:['#1b4332','#2d6a4f','#40916c','#b55c0f','#6aaa6a','#0d2b1e','#2d7050'],
-    sigCol:'#444', stars:'🌟 ⭐ 🌟 ⭐ 🌟',
-    title:'Master Builder Award',
-    desc:'For growing imagination and building a brighter world, one brick at a time! 🌿🧱'
-  },
-  royal: {
-    cols: ['#7b2d8b','#d4a017','#5a1e68','#f5d060','#9b45aa','#3a0f46','#c8600e'],
-    darks:['#3a0f46','#7a5800','#3a0f46','#aa8800','#5a1e68','#200830','#7a2000'],
-    sigCol:'#d4a017', stars:'👑 ⭐ 👑 ⭐ 👑',
-    title:'Royal Builder Award',
-    desc:'For building with the grace and vision of a true champion! 👑🧱'
-  },
-  sunshine: {
-    cols: ['#e07b00','#f4a261','#e3001b','#f7b731','#ffd166','#e07b00','#e3001b'],
-    darks:['#a85800','#b55c0f','#a00013','#c77d0e','#b09000','#a85800','#a00013'],
-    sigCol:'#7a4a00', stars:'☀️ ⭐ ☀️ ⭐ ☀️',
-    title:'Sunshine Builder Award',
-    desc:'For brightening every day with creativity and boundless energy! ☀️🧱'
-  }
+  classic:  { cols:['#e3001b','#006cb7','#f7b731','#00a650','#f47920','#9e2ca3','#1abc9c'],
+              darks:['#a00013','#004a8f','#c77d0e','#007836','#b55c0f','#6a1c70','#0e8a6e'],
+              sigCol:'#444', stars:'⭐ ⭐ ⭐ ⭐ ⭐',
+              desc:'For completing the LEGO Speed Build Challenge with incredible skill and lightning-fast building! ⚡🧱' },
+  speed:    { cols:['#f7b731','#e3001b','#ff6b35','#006cb7','#f7b731','#e3001b','#ff6b35'],
+              darks:['#c77d0e','#a00013','#cc4400','#004a8f','#c77d0e','#a00013','#cc4400'],
+              sigCol:'#f7b731', stars:'⚡ ⭐ ⚡ ⭐ ⚡',
+              desc:'Fastest hands, biggest dreams — you crushed the LEGO Speed Build Challenge! ⚡🏆' },
+  space:    { cols:['#0a2463','#1a4a9a','#7ecfff','#ffe566','#3a8aee','#0d3b8e','#5aafee'],
+              darks:['#050f2e','#0a2463','#2a7aaa','#aa8800','#1a4a9a','#050f2e','#1a5a99'],
+              sigCol:'#7ecfff', stars:'✨ ⭐ ✨ ⭐ ✨',
+              desc:'For exploring the cosmos brick by brick — a true galactic speed builder! 🚀⭐' },
+  nature:   { cols:['#2d6a4f','#52b788','#74c69d','#f4a261','#a8d5a2','#1b4332','#40916c'],
+              darks:['#1b4332','#2d6a4f','#40916c','#b55c0f','#6aaa6a','#0d2b1e','#2d7050'],
+              sigCol:'#444', stars:'🌟 ⭐ 🌟 ⭐ 🌟',
+              desc:'For growing imagination and building a brighter world, one brick at a time! 🌿🧱' },
+  royal:    { cols:['#7b2d8b','#d4a017','#5a1e68','#f5d060','#9b45aa','#3a0f46','#c8600e'],
+              darks:['#3a0f46','#7a5800','#3a0f46','#aa8800','#5a1e68','#200830','#7a2000'],
+              sigCol:'#d4a017', stars:'👑 ⭐ 👑 ⭐ 👑',
+              desc:'For building with the grace and vision of a true champion! 👑🧱' },
+  sunshine: { cols:['#e07b00','#f4a261','#e3001b','#f7b731','#ffd166','#e07b00','#e3001b'],
+              darks:['#a85800','#b55c0f','#a00013','#c77d0e','#b09000','#a85800','#a00013'],
+              sigCol:'#7a4a00', stars:'☀️ ⭐ ☀️ ⭐ ☀️',
+              desc:'For brightening every day with creativity and boundless energy! ☀️🧱' }
 };
 
-let currentTheme  = 'classic';
-let currentLayout = 'full';
+let currentTheme = 'classic', currentLayout = 'full';
 
 // ══════════════════════════════════════════════════════════════
-// REALISTIC LEGO BRICK DRAWING
+// BRICK DRAWING
 // ══════════════════════════════════════════════════════════════
-function drawBrick(ctx, x, y, w, h, baseColor, darkColor) {
-  ctx.fillStyle = baseColor;
-  ctx.beginPath(); roundRect(ctx, x, y+h*0.18, w, h*0.78, 3); ctx.fill();
-
-  ctx.fillStyle = lighten(baseColor, 20);
-  ctx.beginPath(); roundRect(ctx, x+1, y+h*0.18, w-2, h*0.78-2, 3); ctx.fill();
-
-  ctx.fillStyle = darkColor;
-  ctx.beginPath(); roundRect(ctx, x, y+h*0.84, w, h*0.12+1, 2); ctx.fill();
-
-  ctx.fillStyle = lighten(baseColor, 38);
-  ctx.fillRect(x+3, y+h*0.19, w-6, 2);
-
-  const studRows = 2, studCols = 4;
-  const studR = Math.min(w, h) * 0.085;
-  const studH = studR * 1.1;
-  const gapX  = w / (studCols + 1);
-  const gapY  = (h * 0.58) / (studRows + 0.5);
-
-  for (let r = 0; r < studRows; r++) {
-    for (let c = 0; c < studCols; c++) {
-      const sx = x + gapX * (c + 1);
-      const sy = y + h * 0.18 + gapY * (r + 0.8);
-      ctx.fillStyle = darkColor;
-      ctx.beginPath(); ctx.ellipse(sx, sy+studH*0.5+1, studR, studR*0.45, 0, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = baseColor;
-      ctx.fillRect(sx-studR, sy-studH*0.2, studR*2, studH*0.75);
-      ctx.fillStyle = lighten(baseColor, 22);
-      ctx.beginPath(); ctx.ellipse(sx, sy-studH*0.2, studR, studR*0.45, 0, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = lighten(baseColor, 42);
-      ctx.beginPath(); ctx.ellipse(sx-studR*0.2, sy-studH*0.2-1, studR*0.38, studR*0.18, -0.4, 0, Math.PI*2); ctx.fill();
-      ctx.strokeStyle = darkColor; ctx.lineWidth = 0.6;
-      ctx.beginPath(); ctx.ellipse(sx, sy-studH*0.2, studR, studR*0.45, 0, 0, Math.PI*2); ctx.stroke();
-    }
+function drawBrick(ctx,x,y,w,h,bc,dc){
+  ctx.fillStyle=bc; ctx.beginPath(); roundRect(ctx,x,y+h*.18,w,h*.78,3); ctx.fill();
+  ctx.fillStyle=lighten(bc,20); ctx.beginPath(); roundRect(ctx,x+1,y+h*.18,w-2,h*.78-2,3); ctx.fill();
+  ctx.fillStyle=dc; ctx.beginPath(); roundRect(ctx,x,y+h*.84,w,h*.12+1,2); ctx.fill();
+  ctx.fillStyle=lighten(bc,38); ctx.fillRect(x+3,y+h*.19,w-6,2);
+  const sR=2,sC=4,r=Math.min(w,h)*.085,sH=r*1.1,gX=w/(sC+1),gY=(h*.58)/(sR+.5);
+  for(let i=0;i<sR;i++) for(let j=0;j<sC;j++){
+    const sx=x+gX*(j+1),sy=y+h*.18+gY*(i+.8);
+    ctx.fillStyle=dc; ctx.beginPath(); ctx.ellipse(sx,sy+sH*.5+1,r,r*.45,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=bc; ctx.fillRect(sx-r,sy-sH*.2,r*2,sH*.75);
+    ctx.fillStyle=lighten(bc,22); ctx.beginPath(); ctx.ellipse(sx,sy-sH*.2,r,r*.45,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=lighten(bc,42); ctx.beginPath(); ctx.ellipse(sx-r*.2,sy-sH*.2-1,r*.38,r*.18,-.4,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=dc; ctx.lineWidth=.6; ctx.beginPath(); ctx.ellipse(sx,sy-sH*.2,r,r*.45,0,0,Math.PI*2); ctx.stroke();
   }
 }
-
-function lighten(hex, amt) {
-  const c = parseInt(hex.slice(1), 16);
-  return `rgb(${Math.min(255,(c>>16)+amt)},${Math.min(255,((c>>8)&0xff)+amt)},${Math.min(255,(c&0xff)+amt)})`;
-}
-function roundRect(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x+r, y); ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
-  ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-  ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r);
-  ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y); ctx.closePath();
-}
+function lighten(h,a){const c=parseInt(h.slice(1),16);return `rgb(${Math.min(255,(c>>16)+a)},${Math.min(255,((c>>8)&0xff)+a)},${Math.min(255,(c&0xff)+a)})`;}
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
 
 // ══════════════════════════════════════════════════════════════
-// LAYOUT BRICK PATTERNS
+// LAYOUT PATTERNS
 // ══════════════════════════════════════════════════════════════
-const CW = 960, CH = 680;
-const BW = 60,  BH = 34;
-
-function layoutBricks(layout) {
-  const bricks = []; let ci = 0;
-
-  function row(y, x0, x1, bw=BW, bh=BH) {
-    for (let x = x0; x < x1; x += bw) bricks.push({x, y, w:bw, h:bh, ci:ci++});
-  }
-  function col(x, y0, y1, bw=BH, bh=BW) {
-    for (let y = y0; y < y1; y += bh) bricks.push({x, y, w:bw, h:bh, ci:ci++});
-  }
-
-  switch (layout) {
-    case 'full':
-      row(0, 0, CW); row(CH-BH, 0, CW);
-      col(0, BH, CH-BH); col(CW-BH, BH, CH-BH);
-      break;
-
-    case 'top-bottom':
-      row(0, 0, CW); row(CH-BH, 0, CW);
-      break;
-
-    case 'sides':
-      col(0, 0, CH); col(CW-BH, 0, CH);
-      break;
-
-    case 'top-only':
-      row(0, 0, CW);
-      break;
-
-    case 'bottom-only':
-      row(CH-BH, 0, CW);
-      break;
-
+const CW=960,CH=680,BW=60,BH=34;
+function layoutBricks(layout){
+  const B=[]; let ci=0;
+  const row=(y,x0,x1,bw=BW,bh=BH)=>{for(let x=x0;x<x1;x+=bw)B.push({x,y,w:bw,h:bh,ci:ci++});};
+  const col=(x,y0,y1,bw=BH,bh=BW)=>{for(let y=y0;y<y1;y+=bh)B.push({x,y,w:bw,h:bh,ci:ci++});};
+  switch(layout){
+    case 'full': row(0,0,CW);row(CH-BH,0,CW);col(0,BH,CH-BH);col(CW-BH,BH,CH-BH); break;
+    case 'top-bottom': row(0,0,CW);row(CH-BH,0,CW); break;
+    case 'sides': col(0,0,CH);col(CW-BH,0,CH); break;
+    case 'top-only': row(0,0,CW); break;
+    case 'bottom-only': row(CH-BH,0,CW); break;
     case 'corners':
-      for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) {
-        bricks.push({x:c*BH,         y:r*BH,         w:BH, h:BH, ci:ci++});
-        bricks.push({x:CW-(4-c)*BH,  y:r*BH,         w:BH, h:BH, ci:ci++});
-        bricks.push({x:c*BH,         y:CH-(4-r)*BH,  w:BH, h:BH, ci:ci++});
-        bricks.push({x:CW-(4-c)*BH,  y:CH-(4-r)*BH,  w:BH, h:BH, ci:ci++});
-      }
-      break;
-
-    case 'thick-top':
-      row(0, 0, CW); row(BH, 0, CW); row(BH*2, 0, CW);
-      break;
-
+      for(let r=0;r<4;r++)for(let c=0;c<4;c++){
+        B.push({x:c*BH,y:r*BH,w:BH,h:BH,ci:ci++});B.push({x:CW-(4-c)*BH,y:r*BH,w:BH,h:BH,ci:ci++});
+        B.push({x:c*BH,y:CH-(4-r)*BH,w:BH,h:BH,ci:ci++});B.push({x:CW-(4-c)*BH,y:CH-(4-r)*BH,w:BH,h:BH,ci:ci++});
+      } break;
+    case 'thick-top': row(0,0,CW);row(BH,0,CW);row(BH*2,0,CW); break;
     case 'double-border':
-      row(0, 0, CW);       row(CH-BH, 0, CW);
-      col(0, BH, CH-BH);   col(CW-BH, BH, CH-BH);
-      row(BH*2, BH*2, CW-BH*2);      row(CH-BH*3, BH*2, CW-BH*2);
-      col(BH*2, BH*3, CH-BH*3);      col(CW-BH*3, BH*3, CH-BH*3);
-      break;
-
+      row(0,0,CW);row(CH-BH,0,CW);col(0,BH,CH-BH);col(CW-BH,BH,CH-BH);
+      row(BH*2,BH*2,CW-BH*2);row(CH-BH*3,BH*2,CW-BH*2);col(BH*2,BH*3,CH-BH*3);col(CW-BH*3,BH*3,CH-BH*3); break;
     case 'checkerboard':
-      for (let x = 0; x < CW; x += BW*2) {
-        bricks.push({x, y:0,      w:BW, h:BH, ci:ci++});
-        bricks.push({x:x+BW, y:BH, w:BW, h:BH, ci:ci++});
-      }
-      for (let x = 0; x < CW; x += BW*2) {
-        bricks.push({x, y:CH-BH,    w:BW, h:BH, ci:ci++});
-        bricks.push({x:x+BW, y:CH-BH*2, w:BW, h:BH, ci:ci++});
-      }
-      for (let y = 0; y < CH; y += BH*2) {
-        bricks.push({x:0,  y,      w:BH, h:BH, ci:ci++});
-        bricks.push({x:BH, y:y+BH, w:BH, h:BH, ci:ci++});
-      }
-      for (let y = 0; y < CH; y += BH*2) {
-        bricks.push({x:CW-BH,   y,      w:BH, h:BH, ci:ci++});
-        bricks.push({x:CW-BH*2, y:y+BH, w:BH, h:BH, ci:ci++});
-      }
-      break;
-
-    case 'rainbow':
-      for (let i = 0; i < 5; i++)
-        for (let x = 0; x < CW; x += BW) bricks.push({x, y:i*BH, w:BW, h:BH, ci:i});
-      break;
-
-    case 'zigzag': {
-      const period = BW * 4;
-      for (let x = 0; x < CW; x += BW) {
-        const phase = Math.floor(x / period * 4) % 4;
-        const yOff  = phase < 2 ? phase : 4 - phase;
-        bricks.push({x, y:yOff*BH,          w:BW, h:BH, ci:ci++});
-        bricks.push({x, y:CH-BH-yOff*BH,    w:BW, h:BH, ci:ci++});
-      }
-      for (let y = 0; y < CH; y += BH) {
-        const phase = Math.floor(y / BH) % 4;
-        const xOff  = phase < 2 ? phase : 4 - phase;
-        bricks.push({x:xOff*BH,       y, w:BH, h:BH, ci:ci++});
-        bricks.push({x:CW-BH-xOff*BH, y, w:BH, h:BH, ci:ci++});
-      }
-      break;
-    }
-
+      for(let x=0;x<CW;x+=BW*2){B.push({x,y:0,w:BW,h:BH,ci:ci++});B.push({x:x+BW,y:BH,w:BW,h:BH,ci:ci++});}
+      for(let x=0;x<CW;x+=BW*2){B.push({x,y:CH-BH,w:BW,h:BH,ci:ci++});B.push({x:x+BW,y:CH-BH*2,w:BW,h:BH,ci:ci++});}
+      for(let y=0;y<CH;y+=BH*2){B.push({x:0,y,w:BH,h:BH,ci:ci++});B.push({x:BH,y:y+BH,w:BH,h:BH,ci:ci++});}
+      for(let y=0;y<CH;y+=BH*2){B.push({x:CW-BH,y,w:BH,h:BH,ci:ci++});B.push({x:CW-BH*2,y:y+BH,w:BH,h:BH,ci:ci++});} break;
+    case 'rainbow': for(let i=0;i<5;i++)for(let x=0;x<CW;x+=BW)B.push({x,y:i*BH,w:BW,h:BH,ci:i}); break;
+    case 'zigzag':{const p=BW*4;
+      for(let x=0;x<CW;x+=BW){const ph=Math.floor(x/p*4)%4,yo=ph<2?ph:4-ph;B.push({x,y:yo*BH,w:BW,h:BH,ci:ci++});B.push({x,y:CH-BH-yo*BH,w:BW,h:BH,ci:ci++});}
+      for(let y=0;y<CH;y+=BH){const ph=Math.floor(y/BH)%4,xo=ph<2?ph:4-ph;B.push({x:xo*BH,y,w:BH,h:BH,ci:ci++});B.push({x:CW-BH-xo*BH,y,w:BH,h:BH,ci:ci++});} break;}
     case 'staircase':
-      for (let i = 0; i < 6; i++) for (let j = 0; j <= i; j++) {
-        bricks.push({x:j*BH,         y:i*BH,         w:BH, h:BH, ci:ci++});
-        bricks.push({x:CW-(j+1)*BH,  y:i*BH,         w:BH, h:BH, ci:ci++});
-        bricks.push({x:j*BH,         y:CH-(i+1)*BH,  w:BH, h:BH, ci:ci++});
-        bricks.push({x:CW-(j+1)*BH,  y:CH-(i+1)*BH,  w:BH, h:BH, ci:ci++});
-      }
-      break;
-
+      for(let i=0;i<6;i++)for(let j=0;j<=i;j++){
+        B.push({x:j*BH,y:i*BH,w:BH,h:BH,ci:ci++});B.push({x:CW-(j+1)*BH,y:i*BH,w:BH,h:BH,ci:ci++});
+        B.push({x:j*BH,y:CH-(i+1)*BH,w:BH,h:BH,ci:ci++});B.push({x:CW-(j+1)*BH,y:CH-(i+1)*BH,w:BH,h:BH,ci:ci++});
+      } break;
     case 'diagonal-tl':
-      for (let i = 0; i < Math.ceil((CW+CH)/BH); i++) {
-        const len = Math.min(i+1, 8);
-        for (let j = 0; j < len; j++) {
-          const bx = i*BH - j*BH - BH, by = j*BH;
-          if (bx >= 0 && bx < CW && by >= 0 && by < CH)
-            bricks.push({x:bx, y:by, w:BH, h:BH, ci:ci++});
-        }
-      }
-      break;
-
+      for(let i=0;i<Math.ceil((CW+CH)/BH);i++){const len=Math.min(i+1,8);for(let j=0;j<len;j++){const bx=i*BH-j*BH-BH,by=j*BH;if(bx>=0&&bx<CW&&by>=0&&by<CH)B.push({x:bx,y:by,w:BH,h:BH,ci:ci++});}} break;
     case 'diagonal-tr':
-      for (let i = 0; i < Math.ceil((CW+CH)/BH); i++) {
-        const len = Math.min(i+1, 8);
-        for (let j = 0; j < len; j++) {
-          const bx = CW - i*BH + j*BH, by = j*BH;
-          if (bx >= 0 && bx < CW && by >= 0 && by < CH)
-            bricks.push({x:bx, y:by, w:BH, h:BH, ci:ci++});
-        }
-      }
-      break;
-
-    case 'arch': {
-      const cx = CW/2, rx = CW*0.46, ry = CH*0.42;
-      for (let x = 0; x < CW; x += BH) {
-        const nx = (x + BH/2 - cx) / rx;
-        if (Math.abs(nx) <= 1) {
-          const y = CH/2 - ry*Math.sqrt(1 - nx*nx);
-          if (y >= 0) bricks.push({x, y:Math.round(y/BH)*BH, w:BH, h:BH, ci:ci++});
-        }
-      }
-      row(CH-BH, 0, CW, BH, BH);
-      break;
-    }
-
-    case 'diamond': {
-      const mx = CW/2, my = CH/2, rx = CW*0.47, ry = CH*0.47;
-      for (let t = 0; t <= 360; t += 4) {
-        const rad = t * Math.PI / 180;
-        const bx = Math.round((mx + rx*Math.cos(rad)) / BH) * BH;
-        const by = Math.round((my + ry*Math.sin(rad)) / BH) * BH;
-        if (bx >= 0 && bx < CW && by >= 0 && by < CH &&
-            !bricks.some(b => b.x === bx && b.y === by))
-          bricks.push({x:bx, y:by, w:BH, h:BH, ci:ci++});
-      }
-      break;
-    }
-
+      for(let i=0;i<Math.ceil((CW+CH)/BH);i++){const len=Math.min(i+1,8);for(let j=0;j<len;j++){const bx=CW-i*BH+j*BH,by=j*BH;if(bx>=0&&bx<CW&&by>=0&&by<CH)B.push({x:bx,y:by,w:BH,h:BH,ci:ci++});}} break;
+    case 'arch':{const cx=CW/2,rx=CW*.46,ry=CH*.42;
+      for(let x=0;x<CW;x+=BH){const nx=(x+BH/2-cx)/rx;if(Math.abs(nx)<=1){const y=CH/2-ry*Math.sqrt(1-nx*nx);if(y>=0)B.push({x,y:Math.round(y/BH)*BH,w:BH,h:BH,ci:ci++});}}
+      row(CH-BH,0,CW,BH,BH); break;}
+    case 'diamond':{const mx=CW/2,my=CH/2,rx=CW*.47,ry=CH*.47;
+      for(let t=0;t<=360;t+=4){const rad=t*Math.PI/180,bx=Math.round((mx+rx*Math.cos(rad))/BH)*BH,by=Math.round((my+ry*Math.sin(rad))/BH)*BH;
+        if(bx>=0&&bx<CW&&by>=0&&by<CH&&!B.some(b=>b.x===bx&&b.y===by))B.push({x:bx,y:by,w:BH,h:BH,ci:ci++});} break;}
     case 'scattered':
-      [[0,0],[BH,0],[BH*3,0],[BH*6,0],[BH*9,0],[BH*12,0],[BH*14,0],
-       [CW-BH,0],[CW-BH*3,0],[CW-BH*5,0],
-       [0,BH],[0,BH*3],[0,BH*6],[0,BH*9],[0,BH*12],[0,BH*15],
-       [CW-BH,BH],[CW-BH,BH*4],[CW-BH,BH*8],[CW-BH,BH*12],[CW-BH,BH*16],
-       [BH,CH-BH],[BH*4,CH-BH],[BH*8,CH-BH],[BH*12,CH-BH],[BH*15,CH-BH],
-       [CW-BH*2,CH-BH],[CW-BH*5,CH-BH],[CW-BH*8,CH-BH],
-       [BH*2,BH*2],[BH*5,BH*1],[CW-BH*3,BH*3],[BH,CH-BH*3],[CW-BH*2,CH-BH*4]
-      ].forEach(([x,y]) => bricks.push({x, y, w:BH, h:BH, ci:ci++}));
-      break;
-
+      [[0,0],[BH,0],[BH*3,0],[BH*6,0],[BH*9,0],[BH*12,0],[BH*14,0],[CW-BH,0],[CW-BH*3,0],[CW-BH*5,0],
+       [0,BH],[0,BH*3],[0,BH*6],[0,BH*9],[0,BH*12],[0,BH*15],[CW-BH,BH],[CW-BH,BH*4],[CW-BH,BH*8],[CW-BH,BH*12],[CW-BH,BH*16],
+       [BH,CH-BH],[BH*4,CH-BH],[BH*8,CH-BH],[BH*12,CH-BH],[BH*15,CH-BH],[CW-BH*2,CH-BH],[CW-BH*5,CH-BH],[CW-BH*8,CH-BH],
+       [BH*2,BH*2],[BH*5,BH],[CW-BH*3,BH*3],[BH,CH-BH*3],[CW-BH*2,CH-BH*4]
+      ].forEach(([x,y])=>B.push({x,y,w:BH,h:BH,ci:ci++})); break;
     case 'wave':
-      for (let x = 0; x < CW; x += BH) {
-        const t    = x / CW * Math.PI * 4;
-        const yTop = Math.round((BH + Math.sin(t) * BH * 1.5) / BH) * BH;
-        const yBot = Math.round((CH - BH*3 + Math.sin(t + Math.PI) * BH * 1.5) / BH) * BH;
-        bricks.push({x, y:Math.max(0, yTop),     w:BH, h:BH, ci:ci++});
-        bricks.push({x, y:Math.min(CH-BH, yBot),  w:BH, h:BH, ci:ci++});
-      }
-      break;
-
-    case 'left-accent':
-      col(0, 0, CH); col(BH, 0, CH); col(BH*2, 0, CH);
-      row(0, BH*3, CW); row(CH-BH, BH*3, CW);
-      break;
-
+      for(let x=0;x<CW;x+=BH){const t=x/CW*Math.PI*4,yT=Math.round((BH+Math.sin(t)*BH*1.5)/BH)*BH,yB=Math.round((CH-BH*3+Math.sin(t+Math.PI)*BH*1.5)/BH)*BH;
+        B.push({x,y:Math.max(0,yT),w:BH,h:BH,ci:ci++});B.push({x,y:Math.min(CH-BH,yB),w:BH,h:BH,ci:ci++});} break;
+    case 'left-accent': col(0,0,CH);col(BH,0,CH);col(BH*2,0,CH);row(0,BH*3,CW);row(CH-BH,BH*3,CW); break;
     case 'cross':
-      row(Math.floor(CH/2/BH)*BH,   0, CW, BH, BH);
-      row(Math.floor(CH/2/BH)*BH-BH, 0, CW, BH, BH);
-      col(Math.floor(CW/2/BH)*BH,   0, CH, BH, BH);
-      col(Math.floor(CW/2/BH)*BH-BH, 0, CH, BH, BH);
-      break;
+      row(Math.floor(CH/2/BH)*BH,0,CW,BH,BH);row(Math.floor(CH/2/BH)*BH-BH,0,CW,BH,BH);
+      col(Math.floor(CW/2/BH)*BH,0,CH,BH,BH);col(Math.floor(CW/2/BH)*BH-BH,0,CH,BH,BH); break;
   }
-  return bricks;
+  return B;
 }
 
-// ══════════════════════════════════════════════════════════════
-// CONTENT INSET PER LAYOUT
-// Correct values based on actual brick depths drawn
-// ══════════════════════════════════════════════════════════════
-const INSET = {
-  'full':         {t:46,  r:46,  b:46,  l:46},
-  'top-bottom':   {t:46,  r:8,   b:46,  l:8},
-  'sides':        {t:8,   r:46,  b:8,   l:46},
-  'top-only':     {t:46,  r:8,   b:8,   l:8},
-  'bottom-only':  {t:8,   r:8,   b:46,  l:8},
-  'corners':      {t:10,  r:10,  b:10,  l:10},
-  'thick-top':    {t:107, r:8,   b:8,   l:8},
-  'double-border':{t:106, r:106, b:106, l:106},
-  'checkerboard': {t:70,  r:70,  b:70,  l:70},
-  'rainbow':      {t:175, r:8,   b:8,   l:8},
-  'zigzag':       {t:104, r:104, b:104, l:104},
-  'staircase':    {t:10,  r:10,  b:10,  l:10},
-  'diagonal-tl':  {t:10,  r:10,  b:10,  l:10},
-  'diagonal-tr':  {t:10,  r:10,  b:10,  l:10},
-  'arch':         {t:46,  r:8,   b:46,  l:8},
-  'diamond':      {t:10,  r:10,  b:10,  l:10},
-  'scattered':    {t:10,  r:10,  b:10,  l:10},
-  'wave':         {t:46,  r:8,   b:46,  l:8},
-  'left-accent':  {t:46,  r:8,   b:46,  l:110},
-  'cross':        {t:10,  r:10,  b:10,  l:10},
+const INSET={
+  'full':{t:46,r:46,b:46,l:46},'top-bottom':{t:46,r:8,b:46,l:8},'sides':{t:8,r:46,b:8,l:46},
+  'top-only':{t:46,r:8,b:8,l:8},'bottom-only':{t:8,r:8,b:46,l:8},'corners':{t:10,r:10,b:10,l:10},
+  'thick-top':{t:107,r:8,b:8,l:8},'double-border':{t:106,r:106,b:106,l:106},'checkerboard':{t:70,r:70,b:70,l:70},
+  'rainbow':{t:175,r:8,b:8,l:8},'zigzag':{t:104,r:104,b:104,l:104},'staircase':{t:10,r:10,b:10,l:10},
+  'diagonal-tl':{t:10,r:10,b:10,l:10},'diagonal-tr':{t:10,r:10,b:10,l:10},'arch':{t:46,r:8,b:46,l:8},
+  'diamond':{t:10,r:10,b:10,l:10},'scattered':{t:10,r:10,b:10,l:10},'wave':{t:46,r:8,b:46,l:8},
+  'left-accent':{t:46,r:8,b:46,l:110},'cross':{t:10,r:10,b:10,l:10}
 };
-
-const LAYOUT_TITLES = {
-  'full':         'Speed Build Challenge',
-  'top-bottom':   'Speed Build Award',
-  'sides':        'Builder Certificate',
-  'top-only':     'Rising Star Award',
-  'bottom-only':  'Foundation Builder',
-  'corners':      'Master Builder',
-  'thick-top':    'Grand Achievement',
-  'double-border':'Elite Builder Award',
-  'checkerboard': 'Brick Champion',
-  'rainbow':      'Rainbow Builder',
-  'zigzag':       'Zigzag Creator',
-  'staircase':    'Staircase Achiever',
-  'diagonal-tl':  'Trail Blazer Award',
-  'diagonal-tr':  'Pathfinder Award',
-  'arch':         'Arch Builder Award',
-  'diamond':      'Diamond Builder',
-  'scattered':    'Star Builder Award',
-  'wave':         'Wave Maker Award',
-  'left-accent':  'Champion Builder',
-  'cross':        'Legend Builder',
+const LAYOUT_TITLES={
+  'full':'Speed Build Challenge','top-bottom':'Speed Build Award','sides':'Builder Certificate',
+  'top-only':'Rising Star Award','bottom-only':'Foundation Builder','corners':'Master Builder',
+  'thick-top':'Grand Achievement','double-border':'Elite Builder Award','checkerboard':'Brick Champion',
+  'rainbow':'Rainbow Builder','zigzag':'Zigzag Creator','staircase':'Staircase Achiever',
+  'diagonal-tl':'Trail Blazer Award','diagonal-tr':'Pathfinder Award','arch':'Arch Builder Award',
+  'diamond':'Diamond Builder','scattered':'Star Builder Award','wave':'Wave Maker Award',
+  'left-accent':'Champion Builder','cross':'Legend Builder'
 };
 
 // ══════════════════════════════════════════════════════════════
-// DRAW ALL BRICKS
+// DRAW BRICKS
 // ══════════════════════════════════════════════════════════════
-function redrawBricks() {
-  const canvas = document.getElementById('brick-canvas');
-  const ctx    = canvas.getContext('2d');
-  ctx.clearRect(0, 0, CW, CH);
-  const th     = THEMES[currentTheme];
-  const bricks = layoutBricks(currentLayout);
-  const seen   = new Set();
-  bricks.forEach(({x, y, w, h, ci}) => {
-    const key = `${x},${y}`;
-    if (seen.has(key)) return;
-    seen.add(key);
-    if (x < 0 || y < 0 || x+w > CW+10 || y+h > CH+10) return;
-    drawBrick(ctx, x, y, w, h,
-      th.cols [Math.abs(ci) % th.cols.length],
-      th.darks[Math.abs(ci) % th.darks.length]);
+function redrawBricks(){
+  const canvas=document.getElementById('brick-canvas'),ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,CW,CH);
+  const th=THEMES[currentTheme],bricks=layoutBricks(currentLayout),seen=new Set();
+  bricks.forEach(({x,y,w,h,ci})=>{
+    const k=`${x},${y}`;if(seen.has(k))return;seen.add(k);
+    if(x<0||y<0||x+w>CW+10||y+h>CH+10)return;
+    drawBrick(ctx,x,y,w,h,th.cols[Math.abs(ci)%th.cols.length],th.darks[Math.abs(ci)%th.darks.length]);
   });
+  // Update sparkle colors to match theme
+  document.querySelectorAll('.spark').forEach((s,i)=>{s.style.color=th.cols[i%th.cols.length];});
+}
+
+function applyInset(){
+  const ins=INSET[currentLayout]||INSET['full'];
+  const cc=document.getElementById('cert-content');
+  cc.style.top=ins.t+'px';cc.style.right=ins.r+'px';cc.style.bottom=ins.b+'px';cc.style.left=ins.l+'px';
+  const badge=document.getElementById('placement-badge');
+  badge.style.top=(ins.t+5)+'px';badge.style.right=(ins.r+5)+'px';
 }
 
 // ══════════════════════════════════════════════════════════════
-// APPLY INSET + BADGE POSITION
+// THEME / LAYOUT SWITCHES
 // ══════════════════════════════════════════════════════════════
-function applyInset() {
-  const ins = INSET[currentLayout] || INSET['full'];
-  const cc  = document.getElementById('cert-content');
-  cc.style.top    = ins.t + 'px';
-  cc.style.right  = ins.r + 'px';
-  cc.style.bottom = ins.b + 'px';
-  cc.style.left   = ins.l + 'px';
-  // Keep placement badge just inside the content boundary
-  const badge = document.getElementById('placement-badge');
-  badge.style.top   = (ins.t + 5) + 'px';
-  badge.style.right = (ins.r + 5) + 'px';
-}
-
-// ══════════════════════════════════════════════════════════════
-// THEME SWITCH
-// ══════════════════════════════════════════════════════════════
-function setTheme(name) {
-  currentTheme = name;
-  const page = document.getElementById('the-page');
-  Object.keys(THEMES).forEach(t => page.classList.remove('t-' + t));
-  page.classList.add('t-' + name);
-  document.querySelectorAll('.theme-pill').forEach(p => p.classList.remove('active'));
+function setTheme(name){
+  currentTheme=name;
+  const page=document.getElementById('the-page');
+  Object.keys(THEMES).forEach(t=>page.classList.remove('t-'+t));
+  page.classList.add('t-'+name);
+  document.querySelectorAll('.t-pill').forEach(p=>p.classList.remove('active'));
   document.querySelector(`[data-theme="${name}"]`).classList.add('active');
-  document.getElementById('stars-line').textContent = THEMES[name].stars;
-  redrawBricks();
-  updateMiniBricks();
-  buildNameBricks(document.getElementById('name-input').value);
-  if (sigCtx) sigCtx.strokeStyle = THEMES[name].sigCol;
+  // Only update stars if not manually overridden
+  if(!document.getElementById('stars-input').value.trim())
+    document.getElementById('stars-line').textContent=THEMES[name].stars;
+  // Only update desc if not manually overridden
+  if(!document.getElementById('desc-input').value.trim())
+    document.getElementById('desc-text').innerHTML=THEMES[name].desc;
+  redrawBricks();updateMiniBricks();buildNameBricks(document.getElementById('name-input').value);
+  if(sigCtx)sigCtx.strokeStyle=THEMES[name].sigCol;
 }
 
-// ══════════════════════════════════════════════════════════════
-// LAYOUT SWITCH
-// ══════════════════════════════════════════════════════════════
-function setLayout(name) {
-  currentLayout = name;
-  document.querySelectorAll('.layout-pill').forEach(p => p.classList.remove('active'));
+function setLayout(name){
+  currentLayout=name;
+  document.querySelectorAll('.l-pill').forEach(p=>p.classList.remove('active'));
   document.querySelector(`[data-layout="${name}"]`).classList.add('active');
-  redrawBricks();
-  applyInset();
-  document.getElementById('cert-title').textContent = LAYOUT_TITLES[name] || 'Speed Build Challenge';
+  redrawBricks();applyInset();
+  if(!document.getElementById('title-input').value.trim())
+    document.getElementById('cert-title').textContent=LAYOUT_TITLES[name]||'Speed Build Challenge';
 }
 
 // ══════════════════════════════════════════════════════════════
 // MINI BRICKS
 // ══════════════════════════════════════════════════════════════
-function updateMiniBricks() {
-  const th = THEMES[currentTheme];
-  for (let i = 0; i < 8; i++) {
-    const el = document.getElementById('mb' + i);
-    if (el) el.style.background = th.cols[i % th.cols.length];
-  }
+function updateMiniBricks(){
+  const th=THEMES[currentTheme];
+  for(let i=0;i<8;i++){const el=document.getElementById('mb'+i);if(el)el.style.background=th.cols[i%th.cols.length];}
 }
 
 // ══════════════════════════════════════════════════════════════
-// NAME BRICKS — auto scale by character count
+// NAME BRICKS
 // ══════════════════════════════════════════════════════════════
-function sizeClass(n) {
-  if (n <= 6)  return 'brick-xl';
-  if (n <= 9)  return 'brick-lg';
-  if (n <= 13) return 'brick-md';
-  if (n <= 17) return 'brick-sm';
-  return 'brick-xs';
-}
-
-function buildNameBricks(name) {
-  const container = document.getElementById('name-bricks');
-  container.innerHTML = '';
-  const th      = THEMES[currentTheme];
-  const letters = (name || 'YOUR NAME').toUpperCase().split('');
-  const nonSp   = letters.filter(l => l !== ' ').length;
-  const sz      = sizeClass(nonSp);
-  const spW     = {'brick-xl':10,'brick-lg':9,'brick-md':7,'brick-sm':6,'brick-xs':4};
-  let ci = 0;
-  letters.forEach(ltr => {
-    if (ltr === ' ') {
-      const sp = document.createElement('div');
-      sp.style.width = (spW[sz] || 8) + 'px';
-      container.appendChild(sp);
-      return;
-    }
-    const col = th.cols [ci % th.cols.length];
-    const drk = th.darks[ci % th.darks.length];
-    ci++;
-    const brick = document.createElement('div');
-    brick.className = 'lego-letter ' + sz;
-    brick.style.cssText = `background:${col};border-color:${drk};box-shadow:0 3px 0 ${drk};`;
-    brick.innerHTML = `<div class="stud" style="background:${col};border-color:${drk}"></div>${ltr}`;
-    container.appendChild(brick);
+function sizeClass(n){if(n<=6)return 'brick-xl';if(n<=9)return 'brick-lg';if(n<=13)return 'brick-md';if(n<=17)return 'brick-sm';return 'brick-xs';}
+function buildNameBricks(name){
+  const c=document.getElementById('name-bricks');c.innerHTML='';
+  const th=THEMES[currentTheme],letters=(name||'YOUR NAME').toUpperCase().split('');
+  const nonSp=letters.filter(l=>l!==' ').length,sz=sizeClass(nonSp);
+  const spW={'brick-xl':10,'brick-lg':9,'brick-md':7,'brick-sm':6,'brick-xs':4};
+  let ci=0;
+  letters.forEach(ltr=>{
+    if(ltr===' '){const sp=document.createElement('div');sp.style.width=(spW[sz]||8)+'px';c.appendChild(sp);return;}
+    const col=th.cols[ci%th.cols.length],drk=th.darks[ci%th.darks.length]; ci++;
+    const brick=document.createElement('div');
+    brick.className='lego-letter '+sz;
+    brick.style.cssText=`background:${col};border-color:${drk};box-shadow:0 3px 0 ${drk};`;
+    brick.innerHTML=`<div class="stud" style="background:${col};border-color:${drk}"></div>${ltr}`;
+    c.appendChild(brick);
   });
 }
 
 // ══════════════════════════════════════════════════════════════
-// PLACEMENT BADGE — show/hide + color by rank
+// PLACEMENT BADGE
 // ══════════════════════════════════════════════════════════════
-function updatePlacement(val) {
-  const badge  = document.getElementById('placement-badge');
-  const numEl  = document.getElementById('placement-num');
-  const v      = val.trim();
-  if (!v) { badge.style.display = 'none'; return; }
-  numEl.textContent = v.toUpperCase();
-  badge.className   = 'placement-badge';
-  const lv = v.toLowerCase();
-  if      (lv === '1st' || lv === '1') badge.classList.add('gold');
-  else if (lv === '2nd' || lv === '2') badge.classList.add('silver');
-  else if (lv === '3rd' || lv === '3') badge.classList.add('bronze');
-  else                                  badge.classList.add('other');
-  badge.style.display = 'flex';
+function updatePlacement(val){
+  const badge=document.getElementById('placement-badge'),numEl=document.getElementById('placement-num');
+  const v=val.trim();
+  if(!v){badge.style.display='none';return;}
+  numEl.textContent=v.toUpperCase();
+  badge.className='placement-badge';
+  const lv=v.toLowerCase();
+  if(lv==='1st'||lv==='1')badge.classList.add('gold');
+  else if(lv==='2nd'||lv==='2')badge.classList.add('silver');
+  else if(lv==='3rd'||lv==='3')badge.classList.add('bronze');
+  else badge.classList.add('other');
+  badge.style.display='flex';
 }
 
 // ══════════════════════════════════════════════════════════════
-// STATS ROW — show each chip independently
+// STATS / AGE / DATE / ORG / TITLE / DESC / STARS / CERTNUM
 // ══════════════════════════════════════════════════════════════
-function updateStats() {
-  const timeVal = document.getElementById('time-input').value.trim();
-  const setVal  = document.getElementById('set-input').value.trim();
-  const timeChip = document.getElementById('time-chip');
-  const setChip  = document.getElementById('set-chip');
-  document.getElementById('time-display').textContent = timeVal;
-  document.getElementById('set-display').textContent  = setVal;
-  timeChip.style.display = timeVal ? 'flex' : 'none';
-  setChip.style.display  = setVal  ? 'flex' : 'none';
+function updateStats(){
+  const tv=document.getElementById('time-input').value.trim(),sv=document.getElementById('set-input').value.trim();
+  document.getElementById('time-display').textContent=tv;document.getElementById('set-display').textContent=sv;
+  document.getElementById('time-chip').style.display=tv?'flex':'none';
+  document.getElementById('set-chip').style.display=sv?'flex':'none';
+}
+function updateAge(val){
+  const v=val.trim(),b=document.getElementById('age-badge');
+  b.style.display=v?'inline-flex':'none';document.getElementById('age-display').textContent=v?'Ages '+v:'';
+}
+function updateDate(val){
+  const v=val.trim(),b=document.getElementById('date-block');
+  b.style.display=v?'flex':'none';document.getElementById('date-display').textContent=v;
+}
+function updateOrg(val){document.getElementById('org-display').textContent=val.trim()||'Your Organisation';}
+function updateTitle(val){
+  const v=val.trim();
+  document.getElementById('cert-title').textContent=v||LAYOUT_TITLES[currentLayout]||'Speed Build Challenge';
+}
+function updateDesc(val){
+  const v=val.trim();
+  document.getElementById('desc-text').innerHTML=v||THEMES[currentTheme].desc;
+}
+function updateStars(val){
+  const v=val.trim();
+  document.getElementById('stars-line').textContent=v||THEMES[currentTheme].stars;
+}
+function updateCertNum(val){
+  const v=val.trim(),el=document.getElementById('cert-serial');
+  el.style.display=v?'block':'none';el.textContent=v?'No. '+v:'';
 }
 
 // ══════════════════════════════════════════════════════════════
-// AGE BADGE — show/hide
+// DECORATIONS
 // ══════════════════════════════════════════════════════════════
-function updateAge(val) {
-  const badge = document.getElementById('age-badge');
-  const disp  = document.getElementById('age-display');
-  const v = val.trim();
-  badge.style.display = v ? 'inline-flex' : 'none';
-  disp.textContent    = v ? 'Ages ' + v : '';
+function toggleTrophy(on){document.getElementById('trophy-wm').style.display=on?'block':'none';}
+function toggleSparkles(on){document.getElementById('sparkle-wrap').style.display=on?'block':'none';}
+function toggleMiniBricks(on){document.getElementById('mini-bricks-row').style.display=on?'flex':'none';}
+
+// ══════════════════════════════════════════════════════════════
+// QUICK PRESETS
+// ══════════════════════════════════════════════════════════════
+function applyPreset(type){
+  const pi=document.getElementById('placement-input');
+  const ti=document.getElementById('title-input');
+  const di=document.getElementById('desc-input');
+  if(type==='1st'){
+    pi.value='1st'; updatePlacement('1st'); markFilled(pi);
+    if(!ti.value) { document.getElementById('cert-title').textContent='Speed Build Champion'; }
+  } else if(type==='2nd'){
+    pi.value='2nd'; updatePlacement('2nd'); markFilled(pi);
+  } else if(type==='3rd'){
+    pi.value='3rd'; updatePlacement('3rd'); markFilled(pi);
+  } else {
+    pi.value=''; updatePlacement(''); pi.classList.remove('filled');
+    if(!ti.value) document.getElementById('cert-title').textContent='Certificate of Participation';
+    if(!di.value) document.getElementById('desc-text').innerHTML=
+      'For taking part in the LEGO Speed Build Challenge with fantastic enthusiasm and effort! 🧱⭐';
+  }
+  checkReady();
 }
 
 // ══════════════════════════════════════════════════════════════
-// DATE — show/hide
+// MULTIPLE NAMES
 // ══════════════════════════════════════════════════════════════
-function updateDate(val) {
-  const block = document.getElementById('date-block');
-  const disp  = document.getElementById('date-display');
-  const v = val.trim();
-  block.style.display = v ? 'flex' : 'none';
-  disp.textContent    = v;
+let namesList=[], nameIdx=0;
+function parseNamesList(val){
+  const raw=val.split(',').map(s=>s.trim()).filter(Boolean);
+  namesList=raw.length>1?raw:[];
+  nameIdx=0;
+  updateNameNav();
+  if(namesList.length>0) setCurrentName();
+}
+function setCurrentName(){
+  const ni=document.getElementById('name-input');
+  ni.value=namesList[nameIdx];
+  buildNameBricks(namesList[nameIdx]);
+  updateCharCount(namesList[nameIdx],'name-chars',24);
+  markFilled(ni);
+}
+function updateNameNav(){
+  const prev=document.getElementById('name-prev'),next=document.getElementById('name-next'),ct=document.getElementById('name-ct');
+  const has=namesList.length>1;
+  prev.disabled=!has||nameIdx===0; next.disabled=!has||nameIdx===namesList.length-1;
+  ct.textContent=has?`${nameIdx+1} / ${namesList.length}`:'—';
+}
+function stepName(dir){
+  nameIdx=Math.max(0,Math.min(namesList.length-1,nameIdx+dir));
+  setCurrentName(); updateNameNav();
 }
 
 // ══════════════════════════════════════════════════════════════
-// ORG NAME
+// ACCORDION
 // ══════════════════════════════════════════════════════════════
-function updateOrg(val) {
-  document.getElementById('org-display').textContent = val.trim() || 'Your Organization';
+function toggleSec(hd){hd.parentElement.classList.toggle('open');}
+
+// ══════════════════════════════════════════════════════════════
+// ZOOM
+// ══════════════════════════════════════════════════════════════
+function applyZoom(pct){
+  const scale=pct/100;
+  document.getElementById('cert-zoom-outer').style.transform=`scale(${scale})`;
+  document.getElementById('cert-zoom-outer').style.transformOrigin='top center';
+  document.getElementById('zoom-val').textContent=pct+'%';
+  const slider=document.getElementById('zoom-slider');
+  const min=+slider.min,max=+slider.max;
+  slider.style.setProperty('--pct',((pct-min)/(max-min)*100)+'%');
+  // Adjust container height so page doesn't clip
+  const outer=document.getElementById('cert-zoom-outer');
+  outer.parentElement.style.height=(680*scale+48)+'px';
 }
 
-function updateTitle(val) {
-  const v = val.trim();
-  document.getElementById('cert-title').textContent =
-    v || LAYOUT_TITLES[currentLayout] || 'Speed Build Challenge';
+// ══════════════════════════════════════════════════════════════
+// FIELD HELPERS
+// ══════════════════════════════════════════════════════════════
+function markFilled(input){
+  input.classList.toggle('filled',input.value.trim().length>0);
+  checkReady();
+}
+function updateCharCount(val,id,max){
+  const el=document.getElementById(id),n=val.length;
+  el.textContent=`${n} / ${max}`;
+  el.classList.toggle('warn',n>max*.8);
+  el.classList.toggle('over',n>=max);
+}
+function checkReady(){
+  const name=document.getElementById('name-input').value.trim();
+  const badge=document.getElementById('ready-badge');
+  badge.style.display=name?'flex':'none';
+}
+
+// ══════════════════════════════════════════════════════════════
+// RESET ALL
+// ══════════════════════════════════════════════════════════════
+function resetAll(){
+  if(!confirm('Clear everything and start fresh?'))return;
+  ['name-input','placement-input','time-input','set-input','age-input','date-input',
+   'title-input','desc-input','stars-input','certnum-input','names-list','org-input'
+  ].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.value=id==='org-input'?'Islamic Center of Brushy Creek':'';el.classList.remove('filled');}
+  });
+  document.getElementById('trophy-tog').checked=false; toggleTrophy(false);
+  document.getElementById('sparkle-tog').checked=false; toggleSparkles(false);
+  document.getElementById('minibricks-tog').checked=true; toggleMiniBricks(true);
+  namesList=[];nameIdx=0;updateNameNav();
+  updatePlacement('');updateStats();updateAge('');updateDate('');
+  updateOrg('Islamic Center of Brushy Creek');
+  updateTitle('');updateDesc('');updateStars('');updateCertNum('');
+  document.getElementById('name-chars').textContent='0 / 24';
+  buildNameBricks('YOUR NAME');
+  clearSig();
+  checkReady();
 }
 
 // ══════════════════════════════════════════════════════════════
 // SIGNATURE
 // ══════════════════════════════════════════════════════════════
 let sigCtx;
-function initSig() {
-  const canvas = document.getElementById('sig1');
-  const ctx    = canvas.getContext('2d');
-  ctx.strokeStyle = THEMES[currentTheme].sigCol;
-  ctx.lineWidth = 1.8; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  let down = false;
-  const pos = e => {
-    const r = canvas.getBoundingClientRect();
-    return e.touches
-      ? {x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top}
-      : {x: e.clientX - r.left,            y: e.clientY - r.top};
-  };
-  canvas.addEventListener('mousedown',  e => { down=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); });
-  canvas.addEventListener('mousemove',  e => { if(!down) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); });
-  canvas.addEventListener('mouseup',    () => down = false);
-  canvas.addEventListener('mouseleave', () => down = false);
-  canvas.addEventListener('touchstart', e => { e.preventDefault(); down=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); }, {passive:false});
-  canvas.addEventListener('touchmove',  e => { if(!down) return; e.preventDefault(); const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); }, {passive:false});
-  canvas.addEventListener('touchend',   () => down = false);
+function initSig(){
+  const canvas=document.getElementById('sig1'),ctx=canvas.getContext('2d');
+  ctx.strokeStyle=THEMES[currentTheme].sigCol;
+  ctx.lineWidth=1.8;ctx.lineCap='round';ctx.lineJoin='round';
+  let down=false;
+  const pos=e=>{const r=canvas.getBoundingClientRect();return e.touches?{x:e.touches[0].clientX-r.left,y:e.touches[0].clientY-r.top}:{x:e.clientX-r.left,y:e.clientY-r.top};};
+  canvas.addEventListener('mousedown', e=>{down=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+  canvas.addEventListener('mousemove', e=>{if(!down)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
+  canvas.addEventListener('mouseup',   ()=>down=false);
+  canvas.addEventListener('mouseleave',()=>down=false);
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();down=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
+  canvas.addEventListener('touchmove', e=>{if(!down)return;e.preventDefault();const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();},{passive:false});
+  canvas.addEventListener('touchend',  ()=>down=false);
   return ctx;
 }
-function clearSig() {
-  const c = document.getElementById('sig1');
-  c.getContext('2d').clearRect(0, 0, c.width, c.height);
-}
+function clearSig(){const c=document.getElementById('sig1');c.getContext('2d').clearRect(0,0,c.width,c.height);}
 
 // ══════════════════════════════════════════════════════════════
-// EVENT WIRING
+// WIRE EVENTS
 // ══════════════════════════════════════════════════════════════
-document.querySelectorAll('.theme-pill') .forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
-document.querySelectorAll('.layout-pill').forEach(b => b.addEventListener('click', () => setLayout(b.dataset.layout)));
-document.getElementById('name-input')     .addEventListener('input', function() { buildNameBricks(this.value); });
-document.getElementById('placement-input').addEventListener('input', function() { updatePlacement(this.value); });
-document.getElementById('time-input')     .addEventListener('input', updateStats);
-document.getElementById('set-input')      .addEventListener('input', updateStats);
-document.getElementById('age-input')      .addEventListener('input', function() { updateAge(this.value); });
-document.getElementById('date-input')     .addEventListener('input', function() { updateDate(this.value); });
-document.getElementById('org-input')      .addEventListener('input', function() { updateOrg(this.value); });
-document.getElementById('title-input')     .addEventListener('input', function() { updateTitle(this.value); });
+document.querySelectorAll('.t-pill').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.theme)));
+document.querySelectorAll('.l-pill').forEach(b=>b.addEventListener('click',()=>setLayout(b.dataset.layout)));
 
 // ══════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════
-window.addEventListener('load', () => {
-  redrawBricks();
-  applyInset();
-  updateMiniBricks();
-  buildNameBricks('YOUR NAME');
-  sigCtx = initSig();
+window.addEventListener('load',()=>{
+  redrawBricks(); applyInset(); updateMiniBricks();
+  buildNameBricks('YOUR NAME'); sigCtx=initSig();
+  applyZoom(82);
+  // Pre-fill name input display
+  document.getElementById('name-input').value='';
+  document.getElementById('name-chars').textContent='0 / 24';
 });
 </script>
 </body>
