@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEGO Certificate Builder – Islamic Center of Brushy Creek</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&family=Bangers&family=Righteous&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family:'Nunito',sans-serif;
+  background:#1a1a2e;
+  min-height:100vh;
+}
+
+/* ══ CONTROL PANEL ══ */
+#control-panel {
+  background:#16213e;
+  border-bottom:3px solid #0f3460;
+  padding:16px 24px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:14px;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+#control-panel h1 {
+  font-family:'Fredoka One',cursive;
+  color:#f7b731;
+  font-size:20px;
+  letter-spacing:1px;
+  flex:0 0 auto;
+}
+
+.ctrl-group {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:10px;
+  padding:6px 12px;
+}
+
+.ctrl-group label {
+  color:#aaa;
+  font-size:12px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  white-space:nowrap;
+}
+
+.ctrl-group input[type=text] {
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:6px;
+  color:#fff;
+  font-family:'Nunito',sans-serif;
+  font-size:14px;
+  padding:5px 10px;
+  outline:none;
+  width:180px;
+  transition:border 0.2s;
+}
+.ctrl-group input[type=text]:focus { border-color:#f7b731; }
+
+/* Theme pills */
+#theme-tabs {
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.theme-tab {
+  padding:6px 14px;
+  border-radius:20px;
+  border:2px solid transparent;
+  font-family:'Fredoka One',cursive;
+  font-size:13px;
+  cursor:pointer;
+  transition:all 0.2s;
+  color:#fff;
+}
+.theme-tab:hover { filter:brightness(1.15); }
+.theme-tab.active { border-color:#fff; transform:scale(1.05); }
+
+.tab-classic  { background:#e3001b; }
+.tab-space    { background:#0a2463; }
+.tab-nature   { background:#2d6a4f; }
+.tab-royal    { background:#7b2d8b; }
+.tab-sunshine { background:#e07b00; }
+
+.print-btn {
+  margin-left:auto;
+  background:#f7b731;
+  color:#1a1a2e;
+  border:none;
+  border-radius:10px;
+  font-family:'Fredoka One',cursive;
+  font-size:15px;
+  padding:8px 22px;
+  cursor:pointer;
+  transition:all 0.2s;
+  box-shadow:0 3px 0 #c77d0e;
+  flex:0 0 auto;
+}
+.print-btn:hover { filter:brightness(1.1); transform:translateY(-1px); }
+.print-btn:active { transform:translateY(1px); box-shadow:0 1px 0 #c77d0e; }
+
+/* ══ CERT WRAPPER ══ */
+#cert-area {
+  display:flex;
+  justify-content:center;
+  padding:32px 24px 20px;
+}
+
+.page {
+  width:960px;
+  min-height:680px;
+  position:relative;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 12px 60px rgba(0,0,0,0.6);
+  flex-shrink:0;
+}
+
+/* ══ BORDER STRIPS ══ */
+.border-strip {
+  position:absolute;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  gap:0;
+  z-index:2;
+}
+.border-strip.top    { top:0;left:0;right:0;height:38px;flex-direction:row; }
+.border-strip.bottom { bottom:0;left:0;right:0;height:38px;flex-direction:row; }
+.border-strip.left   { top:0;bottom:0;left:0;width:38px;flex-direction:column; }
+.border-strip.right  { top:0;bottom:0;right:0;width:38px;flex-direction:column; }
+
+/* ══ CONTENT ══ */
+.cert-content {
+  position:absolute;
+  top:38px;left:38px;right:38px;bottom:38px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+  padding:26px 40px 22px;
+  z-index:1;
+}
+
+.org-pill {
+  font-family:'Fredoka One',cursive;
+  font-size:13px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  border-radius:20px;
+  padding:4px 20px;
+  border:2px solid;
+}
+
+.lego-badge {
+  font-family:'Fredoka One',cursive;
+  font-size:36px;
+  letter-spacing:3px;
+  border-radius:8px;
+  padding:3px 20px;
+  border:4px solid;
+  line-height:1.2;
+}
+
+.cert-title-line {
+  font-family:'Fredoka One',cursive;
+  font-size:27px;
+  letter-spacing:1px;
+  text-align:center;
+}
+
+.stars-line { font-size:20px; letter-spacing:4px; margin:2px 0; }
+
+.presented-block {
+  border-radius:16px;
+  padding:18px 44px 14px;
+  text-align:center;
+  position:relative;
+  width:100%;
+  max-width:660px;
+  border:3px solid;
+}
+.presented-block::before {
+  content:'';
+  position:absolute;
+  top:-13px;left:50%;transform:translateX(-50%);
+  width:26px;height:13px;
+  border-radius:50% 50% 0 0 / 100% 100% 0 0;
+  border:3px solid;
+  border-bottom:none;
+}
+
+.presented-label {
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+
+/* LEGO name bricks */
+.lego-text-name {
+  display:flex;
+  justify-content:center;
+  gap:5px;
+  flex-wrap:wrap;
+  margin:8px 0 4px;
+  min-height:60px;
+  align-items:center;
+}
+
+.lego-letter {
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  width:42px;height:50px;
+  border-radius:6px;
+  border:3px solid;
+  position:relative;
+  font-family:'Fredoka One',cursive;
+  font-size:20px;
+  color:#fff;
+  padding-bottom:4px;
+}
+.lego-letter .stud {
+  position:absolute;
+  top:-9px;left:50%;transform:translateX(-50%);
+  width:16px;height:9px;
+  border-radius:50% 50% 0 0 / 100% 100% 0 0;
+  border:3px solid;
+  border-bottom:none;
+}
+
+.description-text {
+  font-size:13px;
+  text-align:center;
+  max-width:520px;
+  line-height:1.6;
+  margin:4px 0;
+}
+
+/* Brick row */
+.bricks-row {
+  display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:2px 0;
+}
+.mini-brick {
+  display:inline-flex;align-items:center;justify-content:center;
+  width:52px;height:26px;border-radius:4px;
+  border:2px solid rgba(0,0,0,0.2);
+  box-shadow:0 3px 0 rgba(0,0,0,0.2);
+  gap:5px;
+}
+.mini-brick .s {
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(255,255,255,0.35);border:1px solid rgba(0,0,0,0.12);
+}
+
+/* ══ SIGNATURE SECTION ══ */
+.sig-section {
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+}
+
+.sig-row {
+  display:flex;
+  justify-content:center;
+  gap:70px;
+  width:100%;
+}
+
+.sig-block {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+}
+
+.sig-canvas-wrap {
+  position:relative;
+  width:190px;
+  height:50px;
+  cursor:crosshair;
+}
+.sig-canvas-wrap canvas {
+  border-bottom:2px solid #666;
+  cursor:crosshair;
+  display:block;
+}
+.sig-clear-btn {
+  position:absolute;
+  top:2px;right:0;
+  font-size:10px;
+  background:rgba(0,0,0,0.15);
+  border:none;
+  border-radius:4px;
+  padding:2px 5px;
+  cursor:pointer;
+  color:#666;
+}
+.sig-clear-btn:hover { background:rgba(255,0,0,0.2); color:#a00; }
+
+.sig-label-input {
+  border:none;
+  border-bottom:1px dashed #aaa;
+  background:transparent;
+  font-family:'Nunito',sans-serif;
+  font-size:11px;
+  color:#777;
+  text-align:center;
+  width:190px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  outline:none;
+}
+.sig-label-input:focus { border-bottom-color:#f7b731; }
+
+.date-line {
+  font-size:11px;
+  color:#aaa;
+  letter-spacing:1px;
+}
+
+/* ══ THEME DEFINITIONS ══ */
+
+/* — CLASSIC (red/yellow) — */
+.theme-classic .page { background:#fff; }
+.theme-classic .cert-content { background:linear-gradient(155deg,#fffde4 0%,#fff 45%,#e8f4ff 100%); border:3px dashed #ddd; }
+.theme-classic .org-pill { color:#1a5276; border-color:#1a5276; background:#fff; }
+.theme-classic .lego-badge { background:#e3001b; color:#fff; border-color:#a00013; box-shadow:0 4px 0 #700009; }
+.theme-classic .cert-title-line { color:#f7b731; -webkit-text-stroke:1.5px #c77d0e; }
+.theme-classic .presented-block { background:#fff8e1; border-color:#f7b731; }
+.theme-classic .presented-block::before { background:#f7b731; border-color:#c77d0e; }
+.theme-classic .presented-label { color:#666; }
+.theme-classic .description-text { color:#444; }
+.theme-classic .date-line { color:#aaa; }
+
+/* — SPACE (dark blue/silver) — */
+.theme-space .page { background:#050a1a; }
+.theme-space .cert-content {
+  background:radial-gradient(ellipse at 30% 20%,#0a1a40 0%,#050a1a 70%);
+  border:2px solid #1a3a7a;
+}
+.theme-space .cert-content::after {
+  content:'✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦';
+  position:absolute;top:8px;left:0;right:0;
+  text-align:center;font-size:9px;color:rgba(255,255,255,0.15);
+  letter-spacing:8px;pointer-events:none;
+}
+.theme-space .org-pill { color:#7ecfff; border-color:#7ecfff; background:rgba(126,207,255,0.08); }
+.theme-space .lego-badge { background:#0a2463; color:#7ecfff; border-color:#1a4a9a; box-shadow:0 4px 0 #050f2e; }
+.theme-space .cert-title-line { color:#7ecfff; -webkit-text-stroke:1px #2255aa; }
+.theme-space .stars-line { color:#ffe566; }
+.theme-space .presented-block { background:rgba(126,207,255,0.06); border-color:#1a4a9a; }
+.theme-space .presented-block::before { background:#0a2463; border-color:#7ecfff; }
+.theme-space .presented-label { color:#7ecfff; }
+.theme-space .description-text { color:#aaccee; }
+.theme-space .sig-canvas-wrap canvas { border-bottom-color:#3a6aaa; }
+.theme-space .sig-clear-btn { color:#7ecfff; }
+.theme-space .sig-label-input { color:#7ecfff; border-bottom-color:#3a6aaa; }
+.theme-space .date-line { color:#5588bb; }
+
+/* — NATURE (green/earthy) — */
+.theme-nature .page { background:#f0f7ee; }
+.theme-nature .cert-content { background:linear-gradient(140deg,#e8f5e0 0%,#f5fff2 50%,#e0f0e8 100%); border:3px solid #a8d5a2; }
+.theme-nature .org-pill { color:#2d6a4f; border-color:#2d6a4f; background:#fff; }
+.theme-nature .lego-badge { background:#2d6a4f; color:#fff; border-color:#1b4332; box-shadow:0 4px 0 #0d2b1e; }
+.theme-nature .cert-title-line { color:#52b788; -webkit-text-stroke:1px #2d6a4f; }
+.theme-nature .stars-line { color:#f4a261; }
+.theme-nature .presented-block { background:#f0faf0; border-color:#74c69d; }
+.theme-nature .presented-block::before { background:#74c69d; border-color:#52b788; }
+.theme-nature .presented-label { color:#555; }
+.theme-nature .description-text { color:#3a5a40; }
+.theme-nature .date-line { color:#888; }
+
+/* — ROYAL (purple/gold) — */
+.theme-royal .page { background:#1a0a2e; }
+.theme-royal .cert-content {
+  background:linear-gradient(155deg,#1e0a38 0%,#120520 50%,#1a0a2e 100%);
+  border:2px solid #7b2d8b;
+  box-shadow:inset 0 0 60px rgba(123,45,139,0.15);
+}
+.theme-royal .org-pill { color:#d4a017; border-color:#d4a017; background:rgba(212,160,23,0.1); }
+.theme-royal .lego-badge { background:#7b2d8b; color:#f5d060; border-color:#5a1e68; box-shadow:0 4px 0 #3a0f46; }
+.theme-royal .cert-title-line { color:#f5d060; -webkit-text-stroke:1px #c9960a; }
+.theme-royal .stars-line { color:#f5d060; }
+.theme-royal .presented-block { background:rgba(212,160,23,0.07); border-color:#7b2d8b; }
+.theme-royal .presented-block::before { background:#7b2d8b; border-color:#d4a017; }
+.theme-royal .presented-label { color:#d4a017; }
+.theme-royal .description-text { color:#c8a8e0; }
+.theme-royal .sig-canvas-wrap canvas { border-bottom-color:#7b2d8b; }
+.theme-royal .sig-clear-btn { color:#d4a017; }
+.theme-royal .sig-label-input { color:#d4a017; border-bottom-color:#7b2d8b; }
+.theme-royal .date-line { color:#7b5a9a; }
+
+/* — SUNSHINE (orange/bright) — */
+.theme-sunshine .page { background:#fff9f0; }
+.theme-sunshine .cert-content { background:linear-gradient(145deg,#fff3d4 0%,#fff9f0 40%,#ffe8cc 100%); border:3px dashed #f4a261; }
+.theme-sunshine .org-pill { color:#e07b00; border-color:#e07b00; background:#fff; }
+.theme-sunshine .lego-badge { background:#e07b00; color:#fff; border-color:#a85800; box-shadow:0 4px 0 #6b3800; }
+.theme-sunshine .cert-title-line { color:#e07b00; -webkit-text-stroke:1.5px #a85800; }
+.theme-sunshine .stars-line { color:#e3001b; }
+.theme-sunshine .presented-block { background:#fff3d4; border-color:#f4a261; }
+.theme-sunshine .presented-block::before { background:#f4a261; border-color:#e07b00; }
+.theme-sunshine .presented-label { color:#7a4a00; }
+.theme-sunshine .description-text { color:#5a3500; }
+.theme-sunshine .date-line { color:#c08040; }
+
+/* ══ THEME BRICK PALETTE OVERRIDES ══ */
+.theme-space .mini-brick.col1 { background:#0a2463; }
+.theme-space .mini-brick.col2 { background:#1a4a9a; }
+.theme-space .mini-brick.col3 { background:#7ecfff; }
+.theme-space .mini-brick.col4 { background:#ffe566; }
+.theme-space .mini-brick.col5 { background:#3a8aee; }
+
+.theme-nature .mini-brick.col1 { background:#2d6a4f; }
+.theme-nature .mini-brick.col2 { background:#52b788; }
+.theme-nature .mini-brick.col3 { background:#74c69d; }
+.theme-nature .mini-brick.col4 { background:#f4a261; }
+.theme-nature .mini-brick.col5 { background:#a8d5a2; }
+
+.theme-royal .mini-brick.col1 { background:#7b2d8b; }
+.theme-royal .mini-brick.col2 { background:#d4a017; }
+.theme-royal .mini-brick.col3 { background:#5a1e68; }
+.theme-royal .mini-brick.col4 { background:#f5d060; }
+.theme-royal .mini-brick.col5 { background:#9b45aa; }
+
+.theme-sunshine .mini-brick.col1 { background:#e07b00; }
+.theme-sunshine .mini-brick.col2 { background:#f4a261; }
+.theme-sunshine .mini-brick.col3 { background:#e3001b; }
+.theme-sunshine .mini-brick.col4 { background:#f7b731; }
+.theme-sunshine .mini-brick.col5 { background:#ffd166; }
+
+/* ══ PRINT ══ */
+@media print {
+  body { background:#fff !important; }
+  #control-panel { display:none !important; }
+  #cert-area { padding:0 !important; }
+  .page { box-shadow:none !important; width:100% !important; border-radius:0 !important; }
+  .sig-clear-btn { display:none !important; }
+  .sig-label-input { border:none !important; }
+  * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ CONTROL PANEL ══ -->
+<div id="control-panel">
+  <h1>🧱 LEGO Cert Builder</h1>
+
+  <div class="ctrl-group">
+    <label>👤 Name</label>
+    <input type="text" id="name-input" value="YOUR NAME" maxlength="20" placeholder="Type a name...">
+  </div>
+
+  <div id="theme-tabs">
+    <button class="theme-tab tab-classic active" onclick="setTheme('classic')">🔴 Classic</button>
+    <button class="theme-tab tab-space"   onclick="setTheme('space')">🚀 Space</button>
+    <button class="theme-tab tab-nature"  onclick="setTheme('nature')">🌿 Nature</button>
+    <button class="theme-tab tab-royal"   onclick="setTheme('royal')">👑 Royal</button>
+    <button class="theme-tab tab-sunshine" onclick="setTheme('sunshine')">☀️ Sunshine</button>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+</div>
+
+<!-- ══ CERTIFICATE ══ -->
+<div id="cert-area">
+<div class="page" id="the-page">
+
+  <div class="border-strip top"    id="top-strip"></div>
+  <div class="border-strip bottom" id="bot-strip"></div>
+  <div class="border-strip left"   id="left-strip"></div>
+  <div class="border-strip right"  id="right-strip"></div>
+
+  <div class="cert-content">
+
+    <div class="org-pill">Islamic Center of Brushy Creek</div>
+
+    <div style="display:flex;align-items:center;gap:14px;margin:6px 0;">
+      <div class="lego-badge">LEGO</div>
+      <div>
+        <div class="cert-title-line" id="cert-title-line">Certificate of Achievement</div>
+        <div class="stars-line" id="stars-line">⭐ ⭐ ⭐ ⭐ ⭐</div>
+      </div>
+    </div>
+
+    <div class="presented-block">
+      <div class="presented-label">This certificate is proudly presented to:</div>
+      <div class="lego-text-name" id="name-bricks"></div>
+    </div>
+
+    <p class="description-text" id="desc-text">
+      For showing amazing creativity, teamwork, and LEGO‑building skills!<br>
+      Keep building, keep dreaming, and never stop creating! 🧱
+    </p>
+
+    <div class="bricks-row" id="bricks-row">
+      <div class="mini-brick col1"><div class="s"></div><div class="s"></div></div>
+      <div class="mini-brick col2"><div class="s"></div><div class="s"></div></div>
+      <div class="mini-brick col3"><div class="s"></div><div class="s"></div></div>
+      <div class="mini-brick col4"><div class="s"></div><div class="s"></div></div>
+      <div class="mini-brick col5"><div class="s"></div><div class="s"></div></div>
+      <div class="mini-brick col1"><div class="s"></div><div class="s"></div></div>
+      <div class="mini-brick col2"><div class="s"></div><div class="s"></div></div>
+      <div class="mini-brick col3"><div class="s"></div><div class="s"></div></div>
+    </div>
+
+    <!-- SIGNATURES -->
+    <div class="sig-section">
+      <div class="sig-row">
+        <div class="sig-block">
+          <div class="sig-canvas-wrap">
+            <canvas id="sig1" width="190" height="50"></canvas>
+            <button class="sig-clear-btn" onclick="clearSig(1)">✕ clear</button>
+          </div>
+          <input class="sig-label-input" type="text" value="Instructor Signature" id="sig1-label">
+        </div>
+        <div class="sig-block">
+          <div class="sig-canvas-wrap">
+            <canvas id="sig2" width="190" height="50"></canvas>
+            <button class="sig-clear-btn" onclick="clearSig(2)">✕ clear</button>
+          </div>
+          <input class="sig-label-input" type="text" value="Director Signature" id="sig2-label">
+        </div>
+      </div>
+      <div class="date-line">Date: ____________________________</div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+// ══ THEME CONFIG ══
+const THEMES = {
+  classic: {
+    borderColors: ['#e3001b','#006cb7','#f7b731','#00a650','#f47920'],
+    darkColors:   ['#a00013','#004a8f','#c77d0e','#007836','#b55c0f'],
+    nameBrickColors: ['#e3001b','#006cb7','#f7b731','#00a650','#f47920','#9e2ca3','#1abc9c'],
+    nameBrickDarks:  ['#a00013','#004a8f','#c77d0e','#007836','#b55c0f','#6a1c70','#0e8a6e'],
+    sigColor: '#555', titleText:'Certificate of Achievement'
+  },
+  space: {
+    borderColors: ['#0a2463','#1a4a9a','#7ecfff','#ffe566','#3a8aee'],
+    darkColors:   ['#050f2e','#0a2463','#2a7aaa','#aa8800','#1a4a9a'],
+    nameBrickColors: ['#0a2463','#1a4a9a','#7ecfff','#ffe566','#3a8aee','#0d3b8e','#5aafee'],
+    nameBrickDarks:  ['#050f2e','#0a2463','#2a7aaa','#aa8800','#1a4a9a','#050f2e','#1a5a99'],
+    sigColor: '#7ecfff', titleText:'Space Builder Certificate'
+  },
+  nature: {
+    borderColors: ['#2d6a4f','#52b788','#74c69d','#f4a261','#a8d5a2'],
+    darkColors:   ['#1b4332','#2d6a4f','#40916c','#b55c0f','#6aaa6a'],
+    nameBrickColors: ['#2d6a4f','#52b788','#74c69d','#f4a261','#a8d5a2','#1b4332','#40916c'],
+    nameBrickDarks:  ['#1b4332','#2d6a4f','#40916c','#b55c0f','#6aaa6a','#0d2b1e','#2d7050'],
+    sigColor: '#444', titleText:'Master Builder Certificate'
+  },
+  royal: {
+    borderColors: ['#7b2d8b','#d4a017','#5a1e68','#f5d060','#9b45aa'],
+    darkColors:   ['#3a0f46','#7a5800','#3a0f46','#aa8800','#5a1e68'],
+    nameBrickColors: ['#7b2d8b','#d4a017','#5a1e68','#f5d060','#9b45aa','#3a0f46','#b8360e'],
+    nameBrickDarks:  ['#3a0f46','#7a5800','#3a0f46','#aa8800','#5a1e68','#200830','#7a2000'],
+    sigColor: '#d4a017', titleText:'Royal Builder Award'
+  },
+  sunshine: {
+    borderColors: ['#e07b00','#f4a261','#e3001b','#f7b731','#ffd166'],
+    darkColors:   ['#a85800','#b55c0f','#a00013','#c77d0e','#b09000'],
+    nameBrickColors: ['#e07b00','#f4a261','#e3001b','#f7b731','#ffd166','#e07b00','#e3001b'],
+    nameBrickDarks:  ['#a85800','#b55c0f','#a00013','#c77d0e','#b09000','#a85800','#a00013'],
+    sigColor: '#7a4a00', titleText:'Sunshine Builder Certificate'
+  }
+};
+
+let currentTheme = 'classic';
+
+function setTheme(name) {
+  currentTheme = name;
+  const page = document.getElementById('the-page');
+  // Remove all theme classes
+  page.className = 'page';
+  document.getElementById('cert-area').className = '';
+  // Apply wrapper theme to cert-area for theme-specific overrides
+  document.getElementById('cert-area').className = 'theme-' + name;
+  page.classList.add('theme-' + name + '-page');
+
+  // Update active tab
+  document.querySelectorAll('.theme-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.tab-' + name).classList.add('active');
+
+  // Rebuild borders with new colors
+  rebuildBorders();
+
+  // Update title text
+  document.getElementById('cert-title-line').textContent = THEMES[name].titleText;
+
+  // Update sig canvas stroke color
+  [sigCtx1, sigCtx2].forEach(ctx => {
+    if (ctx) ctx.strokeStyle = THEMES[name].sigColor;
+  });
+
+  // Rebuild name with new colors
+  buildNameBricks(document.getElementById('name-input').value);
+}
+
+// ══ BRICK BUILDER ══
+function makeBorderBricks(containerId, horizontal, colors, darks) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  const size = horizontal ? container.offsetWidth : container.offsetHeight;
+  const brickW = horizontal ? 62 : 38;
+  const brickH = horizontal ? 38 : 62;
+  const count = Math.ceil(size / (horizontal ? brickW : brickH)) + 2;
+
+  for (let i = 0; i < count; i++) {
+    const c = colors[i % colors.length];
+    const dark = darks[i % darks.length];
+    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    const W = horizontal ? brickW : brickH;
+    const H = horizontal ? brickH : brickW;
+    svg.setAttribute('width', W);
+    svg.setAttribute('height', H);
+    svg.style.cssText = 'display:block;flex-shrink:0;';
+
+    const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x','1');rect.setAttribute('y','5');
+    rect.setAttribute('width',W-2);rect.setAttribute('height',H-7);
+    rect.setAttribute('rx','3');rect.setAttribute('fill',c);
+    rect.setAttribute('stroke',dark);rect.setAttribute('stroke-width','1.5');
+    svg.appendChild(rect);
+
+    const shad = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    shad.setAttribute('x','1');shad.setAttribute('y',H-4);
+    shad.setAttribute('width',W-2);shad.setAttribute('height','3');
+    shad.setAttribute('rx','1');shad.setAttribute('fill',dark);
+    svg.appendChild(shad);
+
+    const studCount = horizontal ? 2 : 1;
+    const sp = (W-10)/(studCount+1);
+    for (let s=1;s<=studCount;s++) {
+      const e = document.createElementNS('http://www.w3.org/2000/svg','ellipse');
+      e.setAttribute('cx',5+sp*s);e.setAttribute('cy','5');
+      e.setAttribute('rx','5');e.setAttribute('ry','4');
+      e.setAttribute('fill',c);e.setAttribute('stroke',dark);e.setAttribute('stroke-width','1.5');
+      svg.appendChild(e);
+    }
+    container.appendChild(svg);
+  }
+}
+
+function rebuildBorders() {
+  const t = THEMES[currentTheme];
+  makeBorderBricks('top-strip',   true,  t.borderColors, t.darkColors);
+  makeBorderBricks('bot-strip',   true,  t.borderColors, t.darkColors);
+  makeBorderBricks('left-strip',  false, t.borderColors, t.darkColors);
+  makeBorderBricks('right-strip', false, t.borderColors, t.darkColors);
+}
+
+// ══ NAME BRICKS ══
+function buildNameBricks(name) {
+  const container = document.getElementById('name-bricks');
+  container.innerHTML = '';
+  const t = THEMES[currentTheme];
+  const letters = (name || 'YOUR NAME').toUpperCase().split('');
+
+  letters.forEach((ltr, i) => {
+    if (ltr === ' ') {
+      const sp = document.createElement('div');
+      sp.style.width = '12px';
+      container.appendChild(sp);
+      return;
+    }
+    const c = t.nameBrickColors[i % t.nameBrickColors.length];
+    const d = t.nameBrickDarks[i % t.nameBrickDarks.length];
+    const brick = document.createElement('div');
+    brick.className = 'lego-letter';
+    brick.style.cssText = `background:${c};border-color:${d};box-shadow:0 4px 0 ${d};`;
+    brick.innerHTML = `<div class="stud" style="background:${c};border-color:${d}"></div>${ltr}`;
+    container.appendChild(brick);
+  });
+}
+
+// ══ SIGNATURE CANVAS ══
+let sigCtx1, sigCtx2;
+let drawing = false;
+let activeSig = null;
+
+function initSigCanvas(id) {
+  const canvas = document.getElementById('sig' + id);
+  const ctx = canvas.getContext('2d');
+  ctx.strokeStyle = THEMES[currentTheme].sigColor;
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  let isDown = false;
+  let lastX, lastY;
+
+  function getPos(e) {
+    const r = canvas.getBoundingClientRect();
+    if (e.touches) {
+      return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top };
+    }
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  function start(e) {
+    e.preventDefault();
+    isDown = true;
+    const p = getPos(e);
+    lastX = p.x; lastY = p.y;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+  }
+  function move(e) {
+    if (!isDown) return;
+    e.preventDefault();
+    const p = getPos(e);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    lastX = p.x; lastY = p.y;
+  }
+  function end(e) { isDown = false; }
+
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  canvas.addEventListener('mouseup', end);
+  canvas.addEventListener('mouseleave', end);
+  canvas.addEventListener('touchstart', start, {passive:false});
+  canvas.addEventListener('touchmove', move, {passive:false});
+  canvas.addEventListener('touchend', end);
+
+  return ctx;
+}
+
+function clearSig(id) {
+  const canvas = document.getElementById('sig' + id);
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+// ══ INIT ══
+window.addEventListener('load', () => {
+  rebuildBorders();
+  buildNameBricks('YOUR NAME');
+  sigCtx1 = initSigCanvas(1);
+  sigCtx2 = initSigCanvas(2);
+
+  // Apply initial theme wrapper
+  document.getElementById('cert-area').className = 'theme-classic';
+
+  // Name input live update
+  document.getElementById('name-input').addEventListener('input', function() {
+    buildNameBricks(this.value);
+  });
+});
+
+// Keyboard shortcut Ctrl+P hint — browser handles it natively but we can also bind
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+    // Browser print dialog opens automatically — no need to preventDefault
+  }
+});
+</script>
+</body>
+</html>
