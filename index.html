@@ -332,6 +332,27 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
 
   *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
 }
+/* ══ BATCH PRINT — one page per name, all in a single print job ══ */
+#print-all-container{display:none;}
+@media print{
+  /* Let the document grow vertically so all pages fit (override the single-cert constraints) */
+  html.batch-printing, body.batch-printing{
+    width:auto !important;height:auto !important;overflow:visible !important;
+  }
+  body.batch-printing #cert-area,
+  body.batch-printing #topbar,
+  body.batch-printing #sidebar{display:none !important;}
+  body.batch-printing #print-all-container{display:block !important;}
+  body.batch-printing #print-all-container .page{
+    page-break-after:always !important;
+    page-break-inside:avoid !important;
+    margin:0 !important;
+  }
+  body.batch-printing #print-all-container .page:last-child{
+    page-break-after:auto !important;
+  }
+}
+
 /* Keep print-only imgs hidden on screen */
 #brick-print-img{display:none;position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;}
 </style>
@@ -352,6 +373,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
   <div class="top-btns">
     <button class="icon-btn" onclick="resetAll()">↺ Reset</button>
     <button class="print-btn" onclick="printCert()">🖨️ Print / PDF</button>
+    <button class="print-btn" id="print-all-btn" onclick="printAll()">🖨️ Print All</button>
   </div>
 </header>
 
@@ -612,6 +634,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
 
 </div>
 
+<div id="print-all-container"></div>
+
 <script>
 const THEMES = {
   classic:  { cols:['#e3001b','#006cb7','#f7b731','#00a650','#f47920','#9e2ca3','#1abc9c'],
@@ -739,8 +763,8 @@ function updateMiniBricks(){
 }
 
 function sizeClass(n){if(n<=6)return 'brick-xl';if(n<=9)return 'brick-lg';if(n<=13)return 'brick-md';if(n<=17)return 'brick-sm';return 'brick-xs';}
-function buildNameBricks(name){
-  const c=document.getElementById('name-bricks');c.innerHTML='';
+function buildNameBricks(name, targetEl){
+  const c=targetEl||document.getElementById('name-bricks');c.innerHTML='';
   const th=THEMES[currentTheme],letters=(name||'YOUR NAME').toUpperCase().split('');
   const nonSp=letters.filter(l=>l!==' ').length,sz=sizeClass(nonSp);
   const spW={'brick-xl':10,'brick-lg':9,'brick-md':7,'brick-sm':6,'brick-xs':4};
@@ -800,7 +824,10 @@ function applyPreset(type){
 let namesList=[],nameIdx=0;
 function parseNamesList(val){const raw=val.split(',').map(s=>s.trim()).filter(Boolean);namesList=raw.length>1?raw:[];nameIdx=0;updateNameNav();if(namesList.length>0)setCurrentName();}
 function setCurrentName(){const ni=document.getElementById('name-input');ni.value=namesList[nameIdx];buildNameBricks(namesList[nameIdx]);updateCharCount(namesList[nameIdx],'name-chars',24);markFilled(ni);}
-function updateNameNav(){const prev=document.getElementById('name-prev'),next=document.getElementById('name-next'),ct=document.getElementById('name-ct');const has=namesList.length>1;prev.disabled=!has||nameIdx===0;next.disabled=!has||nameIdx===namesList.length-1;ct.textContent=has?`${nameIdx+1} / ${namesList.length}`:'—';}
+function updateNameNav(){const prev=document.getElementById('name-prev'),next=document.getElementById('name-next'),ct=document.getElementById('name-ct');const has=namesList.length>1;prev.disabled=!has||nameIdx===0;next.disabled=!has||nameIdx===namesList.length-1;ct.textContent=has?`${nameIdx+1} / ${namesList.length}`:'—';
+  const btn=document.getElementById('print-all-btn');
+  if(btn) btn.textContent=namesList.length>0?`🖨️ Print All (${namesList.length})`:'🖨️ Print All';
+}
 function stepName(dir){nameIdx=Math.max(0,Math.min(namesList.length-1,nameIdx+dir));setCurrentName();updateNameNav();}
 
 function toggleSec(hd){hd.parentElement.classList.toggle('open');}
@@ -834,6 +861,69 @@ function printCert(){
     img.onerror = res;
   });
   ready(brickImg).then(() => window.print());
+}
+
+function printAll(){
+  if(!namesList || namesList.length < 2){
+    alert(
+      "Paste a comma-separated list of names into \"Batch mode — paste names\" first, then click Print All.\n\n" +
+      "(Need at least 2 names. For a single certificate, use Print / PDF.)"
+    );
+    return;
+  }
+
+  // Snapshot the brick border once — identical across all pages.
+  const brickCanvas   = document.getElementById('brick-canvas');
+  const brickSnapshot = brickCanvas.toDataURL('image/png');
+  const masterPage    = document.getElementById('the-page');
+
+  // Populate the batch container with one cloned .page per name.
+  const container = document.getElementById('print-all-container');
+  container.innerHTML = '';
+
+  namesList.forEach(name => {
+    const clone = masterPage.cloneNode(true);
+
+    // Live canvas → static <img> with the brick snapshot.
+    const canvas = clone.querySelector('canvas');
+    if(canvas){
+      const img = document.createElement('img');
+      img.src = brickSnapshot;
+      img.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;';
+      canvas.replaceWith(img);
+    }
+    // Drop the redundant brick-print-img placeholder.
+    const printImg = clone.querySelector('#brick-print-img');
+    if(printImg) printImg.remove();
+    // Strip duplicate IDs from the clone — keeps the DOM valid.
+    clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+
+    // Only thing that varies per cert: the name bricks.
+    const nameTarget = clone.querySelector('.lego-text-name');
+    if(nameTarget) buildNameBricks(name, nameTarget);
+
+    container.appendChild(clone);
+  });
+
+  document.documentElement.classList.add('batch-printing');
+  document.body.classList.add('batch-printing');
+
+  // Wait for the first brick snapshot to decode before opening the dialog.
+  const firstImg = container.querySelector('img');
+  const ready = () => new Promise(res => {
+    if(firstImg.complete && firstImg.naturalWidth) return res();
+    firstImg.onload = res;
+    firstImg.onerror = res;
+  });
+  ready().then(() => {
+    window.print();
+    // Clean up after the dialog closes (cancel or confirm).
+    setTimeout(() => {
+      document.documentElement.classList.remove('batch-printing');
+      document.body.classList.remove('batch-printing');
+      container.innerHTML = '';
+    }, 400);
+  });
 }
 
 function markFilled(input){input.classList.toggle('filled',input.value.trim().length>0);checkReady();}
