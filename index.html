@@ -71,136 +71,63 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
 #sidebar::-webkit-scrollbar{width:4px;}
 #sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px;}
 
-/* Accordion sections */
-.sec{
-  background:var(--glass);border:1px solid var(--glass-border);
-  border-radius:var(--radius);overflow:hidden;
-}
-.sec-hd{
-  display:flex;align-items:center;gap:8px;padding:10px 13px;
-  cursor:pointer;transition:background .18s;user-select:none;
-}
+.sec{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);overflow:hidden;}
+.sec-hd{display:flex;align-items:center;gap:8px;padding:10px 13px;cursor:pointer;transition:background .18s;user-select:none;}
 .sec-hd:hover{background:rgba(255,255,255,0.05);}
 .sec-hd .ico{font-size:14px;flex-shrink:0;}
 .sec-hd .lbl{font-family:'Fredoka One',cursive;font-size:13px;color:var(--text);flex:1;}
 .sec-hd .arrow{font-size:9px;color:var(--dim);transition:transform .3s var(--spring);}
 .sec.open .sec-hd .arrow{transform:rotate(180deg);}
-.sec-body{
-  max-height:0;overflow:hidden;
-  transition:max-height .38s cubic-bezier(0.4,0,0.2,1),padding .3s;
-  padding:0 12px;
-}
+.sec-body{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(0.4,0,0.2,1),padding .3s;padding:0 12px;}
 .sec.open .sec-body{max-height:1200px;padding:2px 12px 12px;}
 
-/* Fields */
 .field{margin-bottom:9px;}
 .field:last-child{margin-bottom:0;}
-.field>label{
-  display:flex;align-items:center;justify-content:space-between;
-  font-size:10px;color:var(--dim);text-transform:uppercase;
-  letter-spacing:.9px;font-weight:700;margin-bottom:4px;
-}
-.field input[type=text],.field textarea,.field select{
-  width:100%;background:rgba(255,255,255,0.07);
-  border:1.5px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);
-  color:var(--text);font-family:'Nunito',sans-serif;
-  font-size:13px;padding:8px 11px;outline:none;
-  transition:border-color .2s,background .2s;
-}
+.field>label{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.9px;font-weight:700;margin-bottom:4px;}
+.field input[type=text],.field textarea,.field select{width:100%;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.1);border-radius:var(--radius-sm);color:var(--text);font-family:'Nunito',sans-serif;font-size:13px;padding:8px 11px;outline:none;transition:border-color .2s,background .2s;}
 .field textarea{resize:vertical;min-height:64px;line-height:1.5;}
-.field input:focus,.field textarea:focus{
-  border-color:var(--accent);background:rgba(247,183,49,0.07);
-}
+.field input:focus,.field textarea:focus{border-color:var(--accent);background:rgba(247,183,49,0.07);}
 .field input.filled{border-color:rgba(0,200,100,0.35);background:rgba(0,200,100,0.04);}
 .char-ct{font-size:9px;color:var(--dim);font-weight:700;transition:color .2s;}
-.char-ct.warn{color:var(--accent);}
-.char-ct.over{color:#e3001b;}
+.char-ct.warn{color:var(--accent);}.char-ct.over{color:#e3001b;}
 
-/* Quick Presets */
 .presets-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;}
-.preset-btn{
-  border:none;border-radius:10px;padding:9px 6px;
-  font-family:'Fredoka One',cursive;font-size:12px;
-  cursor:pointer;transition:transform .15s var(--spring),filter .15s;
-  letter-spacing:.5px;
-}
+.preset-btn{border:none;border-radius:10px;padding:9px 6px;font-family:'Fredoka One',cursive;font-size:12px;cursor:pointer;transition:transform .15s var(--spring),filter .15s;letter-spacing:.5px;}
 .preset-btn:hover{transform:translateY(-2px);filter:brightness(1.1);}
 .preset-btn:active{transform:scale(.96);}
-.pb-gold  {background:linear-gradient(135deg,#ffe566,#f7b731,#c77d0e);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
+.pb-gold{background:linear-gradient(135deg,#ffe566,#f7b731,#c77d0e);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
 .pb-silver{background:linear-gradient(135deg,#fff,#c8c8c8,#888);color:#333;}
 .pb-bronze{background:linear-gradient(135deg,#ffd9a0,#cd7f32,#7a3a00);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
-.pb-part  {background:linear-gradient(135deg,#7ecfff,#006cb7,#004a8f);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
+.pb-part{background:linear-gradient(135deg,#7ecfff,#006cb7,#004a8f);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
 
-/* Multiple names */
-.multi-header{
-  display:flex;align-items:center;justify-content:space-between;
-  font-size:10px;color:var(--dim);text-transform:uppercase;
-  letter-spacing:.9px;font-weight:700;margin-bottom:4px;margin-top:4px;
-}
+.multi-header{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.9px;font-weight:700;margin-bottom:4px;margin-top:4px;}
 .name-nav{display:flex;align-items:center;gap:8px;margin-top:7px;justify-content:center;}
-.nav-btn{
-  width:28px;height:28px;border-radius:50%;
-  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
-  color:var(--text);cursor:pointer;font-size:14px;line-height:1;
-  display:flex;align-items:center;justify-content:center;
-  transition:background .15s,transform .15s var(--spring);
-}
+.nav-btn{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:var(--text);cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .15s,transform .15s var(--spring);}
 .nav-btn:hover{background:rgba(247,183,49,0.25);transform:scale(1.08);}
 .nav-btn:disabled{opacity:.25;cursor:default;}
 .name-ct{font-size:11px;color:var(--dim);font-weight:700;min-width:36px;text-align:center;}
 
-/* iOS-style toggles */
-.toggle-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);
-}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
 .toggle-row:last-child{border-bottom:none;}
 .toggle-lbl{font-size:12px;color:var(--text);}
 .tog{position:relative;width:38px;height:22px;flex-shrink:0;}
 .tog input{opacity:0;width:0;height:0;position:absolute;}
-.tog-track{
-  position:absolute;inset:0;border-radius:11px;
-  background:rgba(255,255,255,0.12);
-  transition:background .25s;cursor:pointer;
-}
+.tog-track{position:absolute;inset:0;border-radius:11px;background:rgba(255,255,255,0.12);transition:background .25s;cursor:pointer;}
 .tog input:checked + .tog-track{background:#34c759;}
-.tog-thumb{
-  position:absolute;top:3px;left:3px;width:16px;height:16px;
-  border-radius:50%;background:#fff;
-  transition:transform .25s var(--spring);
-  box-shadow:0 1px 4px rgba(0,0,0,.4);pointer-events:none;
-}
+.tog-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .25s var(--spring);box-shadow:0 1px 4px rgba(0,0,0,.4);pointer-events:none;}
 .tog input:checked ~ .tog-thumb{transform:translateX(16px);}
 
-/* Theme & Layout pills */
 .pill-wrap{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
-.t-pill{
-  padding:4px 11px;border-radius:14px;border:2px solid transparent;
-  font-family:'Fredoka One',cursive;font-size:11px;cursor:pointer;
-  transition:all .18s var(--spring);color:#fff;white-space:nowrap;
-}
+.t-pill{padding:4px 11px;border-radius:14px;border:2px solid transparent;font-family:'Fredoka One',cursive;font-size:11px;cursor:pointer;transition:all .18s var(--spring);color:#fff;white-space:nowrap;}
 .t-pill:hover{filter:brightness(1.15);}
 .t-pill.active{border-color:#fff;transform:scale(1.07);box-shadow:0 0 8px rgba(255,255,255,.25);}
-.l-pill{
-  padding:3px 9px;border-radius:8px;border:1.5px solid rgba(255,255,255,.11);
-  font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;
-  cursor:pointer;transition:all .15s;color:rgba(255,255,255,.5);
-  background:rgba(255,255,255,.03);white-space:nowrap;
-}
+.l-pill{padding:3px 9px;border-radius:8px;border:1.5px solid rgba(255,255,255,.11);font-family:'Nunito',sans-serif;font-weight:800;font-size:10px;cursor:pointer;transition:all .15s;color:rgba(255,255,255,.5);background:rgba(255,255,255,.03);white-space:nowrap;}
 .l-pill:hover{background:rgba(255,255,255,.09);color:var(--text);}
 .l-pill.active{border-color:var(--accent);color:var(--accent);background:rgba(247,183,49,.1);}
 
-/* Section label */
 .sec-sublabel{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin:8px 0 4px;}
 
-/* Reset / clear */
-#reset-btn{
-  background:rgba(227,0,27,0.1);border:1px solid rgba(227,0,27,0.25);
-  border-radius:var(--radius-sm);color:#ff5555;
-  font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;
-  padding:9px;cursor:pointer;transition:all .2s;text-align:center;
-  margin-top:4px;
-}
+#reset-btn{background:rgba(227,0,27,0.1);border:1px solid rgba(227,0,27,0.25);border-radius:var(--radius-sm);color:#ff5555;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;padding:9px;cursor:pointer;transition:all .2s;text-align:center;margin-top:4px;}
 #reset-btn:hover{background:rgba(227,0,27,0.2);border-color:rgba(227,0,27,0.5);}
 
 /* ══ CERT AREA ══ */
@@ -208,47 +135,26 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
 #cert-zoom-outer{transform-origin:top center;transition:transform .25s ease;}
 
 /* ══ PAGE ══ */
-.page{width:960px;height:680px;position:relative;border-radius:10px;overflow:hidden;
-  box-shadow:0 16px 70px rgba(0,0,0,.75);flex-shrink:0;}
+.page{width:960px;height:680px;position:relative;border-radius:10px;overflow:hidden;box-shadow:0 16px 70px rgba(0,0,0,.75);flex-shrink:0;}
 #brick-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;}
 
 /* ══ PLACEMENT BADGE ══ */
-.placement-badge{
-  position:absolute;z-index:10;width:92px;height:92px;border-radius:50%;
-  display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-}
-.placement-badge.gold  {background:radial-gradient(circle at 36% 30%,#fff9c0,#f7b731 44%,#b86b00);border:4px solid #c77d0e;box-shadow:0 0 0 3px #f7b731,0 0 22px rgba(247,183,49,.7),0 5px 14px rgba(0,0,0,.4);}
+.placement-badge{position:absolute;z-index:10;width:92px;height:92px;border-radius:50%;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.placement-badge.gold{background:radial-gradient(circle at 36% 30%,#fff9c0,#f7b731 44%,#b86b00);border:4px solid #c77d0e;box-shadow:0 0 0 3px #f7b731,0 0 22px rgba(247,183,49,.7),0 5px 14px rgba(0,0,0,.4);}
 .placement-badge.silver{background:radial-gradient(circle at 36% 30%,#fff,#d4d4d4 44%,#777);border:4px solid #999;box-shadow:0 0 0 3px #ccc,0 0 18px rgba(180,180,180,.55),0 5px 14px rgba(0,0,0,.35);}
 .placement-badge.bronze{background:radial-gradient(circle at 36% 30%,#ffe0a0,#cd7f32 44%,#7a3a00);border:4px solid #8b4513;box-shadow:0 0 0 3px #cd7f32,0 0 18px rgba(205,127,50,.55),0 5px 14px rgba(0,0,0,.35);}
-.placement-badge.other {background:radial-gradient(circle at 36% 30%,#d0eaff,#2255cc 44%,#0a1a6e);border:4px solid #1a3a9a;box-shadow:0 0 0 3px #2255cc,0 0 18px rgba(34,85,204,.5),0 5px 14px rgba(0,0,0,.35);}
+.placement-badge.other{background:radial-gradient(circle at 36% 30%,#d0eaff,#2255cc 44%,#0a1a6e);border:4px solid #1a3a9a;box-shadow:0 0 0 3px #2255cc,0 0 18px rgba(34,85,204,.5),0 5px 14px rgba(0,0,0,.35);}
 .placement-num{font-family:'Fredoka One',cursive;font-size:27px;line-height:1;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,.45);}
 .placement-label{font-family:'Fredoka One',cursive;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.92);text-shadow:0 1px 3px rgba(0,0,0,.4);margin-top:1px;}
 .placement-stars{font-size:9px;margin-top:2px;letter-spacing:1px;}
 
-/* ══ TROPHY WATERMARK ══ */
-.trophy-wm{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  font-size:200px;opacity:.045;pointer-events:none;z-index:2;line-height:1;
-  display:none;user-select:none;
-}
-
-/* ══ SPARKLE DECOR ══ */
+.trophy-wm{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:200px;opacity:.045;pointer-events:none;z-index:2;line-height:1;display:none;user-select:none;}
 .sparkle-wrap{position:absolute;inset:0;pointer-events:none;z-index:2;display:none;}
 .spark{position:absolute;font-size:18px;opacity:.55;line-height:1;}
 
-/* ══ CERT CONTENT ══ */
-.cert-content{
-  position:absolute;z-index:3;
-  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
-  padding:14px 28px 10px;top:46px;left:46px;right:46px;bottom:46px;
-}
+.cert-content{position:absolute;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:14px 28px 10px;top:46px;left:46px;right:46px;bottom:46px;}
 
-/* ══ COMMON CERT ELEMENTS ══ */
-.org-pill{
-  font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;
-  border-radius:20px;padding:4px 18px;border:2px solid;white-space:nowrap;
-  max-width:100%;overflow:hidden;text-overflow:ellipsis;text-align:center;
-}
+.org-pill{font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;border-radius:20px;padding:4px 18px;border:2px solid;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;text-align:center;}
 .header-row{display:flex;align-items:center;gap:13px;}
 .lego-badge{font-family:'Fredoka One',cursive;font-size:34px;letter-spacing:3px;border-radius:8px;padding:3px 18px;border:4px solid;line-height:1.2;flex-shrink:0;}
 .cert-title-line{font-family:'Fredoka One',cursive;font-size:26px;letter-spacing:1px;text-align:center;}
@@ -263,7 +169,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
 .brick-lg{width:38px;height:46px;font-size:18px;} .brick-lg .stud{width:13px;height:8px;}
 .brick-md{width:31px;height:38px;font-size:15px;} .brick-md .stud{width:11px;height:7px;top:-7px;}
 .brick-sm{width:25px;height:31px;font-size:11px;} .brick-sm .stud{width:9px;height:6px;top:-6px;}
-.brick-xs{width:20px;height:25px;font-size:9px;}  .brick-xs .stud{width:7px;height:4px;top:-5px;}
+.brick-xs{width:20px;height:25px;font-size:9px;} .brick-xs .stud{width:7px;height:4px;top:-5px;}
 .description-text{font-size:13px;text-align:center;max-width:530px;line-height:1.6;margin:1px 0;}
 .stats-row{display:flex;align-items:center;gap:12px;justify-content:center;margin:1px 0;flex-wrap:wrap;}
 .stat-chip{display:none;align-items:center;gap:7px;border-radius:20px;padding:5px 16px;border:2.5px solid;font-family:'Fredoka One',cursive;font-size:14px;white-space:nowrap;}
@@ -369,24 +275,34 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
 .t-sunshine .date-value{color:#c08040;} .t-sunshine .date-label-text{color:#c08040;}
 .t-sunshine .cert-serial{color:#c08040;}
 
-/* ══ PRINT ══ */
+/* ══ PRINT — ALL 3 FIXES APPLIED ══ */
 @media print{
-  @page{size:11in 8.5in landscape;margin:0;}
+  /* FIX #2: Use landscape keyword — avoids inch/px mismatch */
+  @page{size:landscape;margin:0;}
   body{background:#fff !important;display:block;height:auto;overflow:visible;}
   #topbar,#sidebar{display:none !important;}
   #layout{display:block;}
+  /* FIX #3: Remove zoom, reset padding */
   #cert-area{padding:0 !important;display:block !important;overflow:visible;}
-  #cert-zoom-outer{transform:none !important;}
-  .page{width:11in !important;height:8.5in !important;box-shadow:none !important;border-radius:0 !important;overflow:visible !important;}
-  #brick-canvas{width:11in !important;height:8.5in !important;}
+  #cert-zoom-outer{transform:none !important;transform-origin:top left !important;}
+  /* FIX #2 cont: Fill the full print page */
+  .page{width:100vw !important;height:100vh !important;box-shadow:none !important;border-radius:0 !important;overflow:visible !important;}
+  /* FIX #1: Hide live canvas; JS-injected img takes over */
+  #brick-canvas{display:none !important;}
+  .sig-canvas-wrap canvas{display:none !important;}
+  /* Show the snapshot images injected by printCert() */
+  #brick-print-img{display:block !important;}
+  #sig-print-img{display:block !important;}
   .sig-clear-btn{display:none !important;}
   *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
 }
+/* Keep print-only imgs hidden on screen */
+#brick-print-img{display:none;position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;}
+#sig-print-img{display:none;position:absolute;top:0;left:0;width:180px;height:44px;}
 </style>
 </head>
 <body>
 
-<!-- ══ TOP BAR ══ -->
 <header id="topbar">
   <div class="brand">⚡ Speed Build</div>
   <div class="top-sep"></div>
@@ -400,17 +316,14 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
   <div id="ready-badge">Ready to print!</div>
   <div class="top-btns">
     <button class="icon-btn" onclick="resetAll()">↺ Reset</button>
-    <button class="print-btn" onclick="window.print()">🖨️ Print / PDF</button>
+    <!-- FIX #1: printCert() instead of window.print() -->
+    <button class="print-btn" onclick="printCert()">🖨️ Print / PDF</button>
   </div>
 </header>
 
-<!-- ══ MAIN LAYOUT ══ -->
 <div id="layout">
 
-<!-- ══ SIDEBAR ══ -->
 <aside id="sidebar">
-
-  <!-- ① Quick Presets -->
   <div class="sec open" data-sec="presets">
     <div class="sec-hd" onclick="toggleSec(this)">
       <span class="ico">⚡</span><span class="lbl">Quick Presets</span><span class="arrow">▼</span>
@@ -425,7 +338,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
     </div>
   </div>
 
-  <!-- ② The Winner -->
   <div class="sec open" data-sec="winner">
     <div class="sec-hd" onclick="toggleSec(this)">
       <span class="ico">🏅</span><span class="lbl">The Winner</span><span class="arrow">▼</span>
@@ -441,7 +353,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
         <input type="text" id="placement-input" maxlength="5" placeholder="1st, 2nd, 3rd…"
           oninput="updatePlacement(this.value);markFilled(this)">
       </div>
-      <!-- Multiple names -->
       <div class="multi-header">Batch mode — paste names</div>
       <div class="field">
         <label>Names list <span style="font-size:9px;text-transform:none;color:var(--dim)">comma-separated</span></label>
@@ -455,7 +366,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
     </div>
   </div>
 
-  <!-- ③ The Certificate -->
   <div class="sec" data-sec="cert">
     <div class="sec-hd" onclick="toggleSec(this)">
       <span class="ico">📜</span><span class="lbl">The Certificate</span><span class="arrow">▼</span>
@@ -489,7 +399,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
     </div>
   </div>
 
-  <!-- ④ Race Details -->
   <div class="sec" data-sec="race">
     <div class="sec-hd" onclick="toggleSec(this)">
       <span class="ico">🏁</span><span class="lbl">Race Details</span><span class="arrow">▼</span>
@@ -518,7 +427,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
     </div>
   </div>
 
-  <!-- ⑤ Look & Feel -->
   <div class="sec open" data-sec="look">
     <div class="sec-hd" onclick="toggleSec(this)">
       <span class="ico">🎨</span><span class="lbl">Look & Feel</span><span class="arrow">▼</span>
@@ -559,7 +467,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
     </div>
   </div>
 
-  <!-- ⑥ Decorations -->
   <div class="sec" data-sec="deco">
     <div class="sec-hd" onclick="toggleSec(this)">
       <span class="ico">🎊</span><span class="lbl">Decorations</span><span class="arrow">▼</span>
@@ -567,50 +474,38 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
     <div class="sec-body">
       <div class="toggle-row">
         <span class="toggle-lbl">🏆 Trophy watermark</span>
-        <label class="tog">
-          <input type="checkbox" id="trophy-tog" onchange="toggleTrophy(this.checked)">
-          <div class="tog-track"></div><div class="tog-thumb"></div>
-        </label>
+        <label class="tog"><input type="checkbox" id="trophy-tog" onchange="toggleTrophy(this.checked)"><div class="tog-track"></div><div class="tog-thumb"></div></label>
       </div>
       <div class="toggle-row">
         <span class="toggle-lbl">✨ Sparkle accents</span>
-        <label class="tog">
-          <input type="checkbox" id="sparkle-tog" onchange="toggleSparkles(this.checked)">
-          <div class="tog-track"></div><div class="tog-thumb"></div>
-        </label>
+        <label class="tog"><input type="checkbox" id="sparkle-tog" onchange="toggleSparkles(this.checked)"><div class="tog-track"></div><div class="tog-thumb"></div></label>
       </div>
       <div class="toggle-row">
         <span class="toggle-lbl">🧱 Show mini bricks row</span>
-        <label class="tog">
-          <input type="checkbox" id="minibricks-tog" onchange="toggleMiniBricks(this.checked)" checked>
-          <div class="tog-track"></div><div class="tog-thumb"></div>
-        </label>
+        <label class="tog"><input type="checkbox" id="minibricks-tog" onchange="toggleMiniBricks(this.checked)" checked><div class="tog-track"></div><div class="tog-thumb"></div></label>
       </div>
     </div>
   </div>
 
   <button id="reset-btn" onclick="resetAll()">↺ Clear everything</button>
+</aside>
 
-</aside><!-- end sidebar -->
-
-<!-- ══ CERT AREA ══ -->
 <main id="cert-area">
   <div id="cert-zoom-outer">
   <div class="page t-classic" id="the-page">
 
     <canvas id="brick-canvas" width="960" height="680"></canvas>
+    <!-- FIX #1: Pre-created snapshot img, hidden on screen, shown during print -->
+    <img id="brick-print-img" alt="">
 
-    <!-- Placement badge -->
     <div class="placement-badge" id="placement-badge">
       <div class="placement-num" id="placement-num">1st</div>
       <div class="placement-label">PLACE</div>
       <div class="placement-stars">⭐⭐⭐</div>
     </div>
 
-    <!-- Trophy watermark -->
     <div class="trophy-wm" id="trophy-wm">🏆</div>
 
-    <!-- Sparkle accents -->
     <div class="sparkle-wrap" id="sparkle-wrap">
       <span class="spark" style="top:7%;left:6%">✦</span>
       <span class="spark" style="top:7%;right:6%">✦</span>
@@ -626,9 +521,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
     </div>
 
     <div class="cert-content" id="cert-content">
-
       <div class="org-pill" id="org-display">Islamic Center of Brushy Creek</div>
-
       <div class="header-row">
         <div class="lego-badge">LEGO</div>
         <div>
@@ -636,29 +529,18 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
           <div class="stars-line" id="stars-line">⚡ ⭐ ⚡ ⭐ ⚡</div>
         </div>
       </div>
-
       <div class="presented-block">
         <div class="presented-label">This certificate is proudly presented to:</div>
         <div class="lego-text-name" id="name-bricks"></div>
       </div>
-
       <p class="description-text" id="desc-text">
         For completing the LEGO Speed Build Challenge with incredible skill and lightning-fast building! ⚡🧱
       </p>
-
       <div class="stats-row" id="stats-row">
-        <div class="stat-chip" id="time-chip">
-          <span class="stat-icon">⏱️</span><span>Time: </span><span id="time-display"></span>
-        </div>
-        <div class="stat-chip" id="set-chip">
-          <span class="stat-icon">🧱</span><span>Built: </span><span id="set-display"></span>
-        </div>
+        <div class="stat-chip" id="time-chip"><span class="stat-icon">⏱️</span><span>Time: </span><span id="time-display"></span></div>
+        <div class="stat-chip" id="set-chip"><span class="stat-icon">🧱</span><span>Built: </span><span id="set-display"></span></div>
       </div>
-
-      <div class="age-badge" id="age-badge">
-        <span>👶</span><span id="age-display"></span>
-      </div>
-
+      <div class="age-badge" id="age-badge"><span>👶</span><span id="age-display"></span></div>
       <div class="bricks-row" id="mini-bricks-row">
         <div class="mini-brick" id="mb0"><div class="s"></div><div class="s"></div></div>
         <div class="mini-brick" id="mb1"><div class="s"></div><div class="s"></div></div>
@@ -669,11 +551,12 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
         <div class="mini-brick" id="mb6"><div class="s"></div><div class="s"></div></div>
         <div class="mini-brick" id="mb7"><div class="s"></div><div class="s"></div></div>
       </div>
-
       <div class="sig-section">
         <div class="sig-block">
           <div class="sig-canvas-wrap">
             <canvas id="sig1" width="180" height="44"></canvas>
+            <!-- FIX #1: signature snapshot img -->
+            <img id="sig-print-img" alt="signature">
             <button class="sig-clear-btn" onclick="clearSig()">✕</button>
           </div>
           <input class="sig-label-input" type="text" value="Instructor Signature">
@@ -683,22 +566,17 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
           <div class="date-value" id="date-display"></div>
         </div>
       </div>
-
       <div class="cert-footer">
         <div class="cert-serial" id="cert-serial"></div>
       </div>
-
-    </div><!-- cert-content -->
-  </div><!-- page -->
-  </div><!-- cert-zoom-outer -->
+    </div>
+  </div>
+  </div>
 </main>
 
-</div><!-- layout -->
+</div>
 
 <script>
-// ══════════════════════════════════════════════════════════════
-// THEME DATA
-// ══════════════════════════════════════════════════════════════
 const THEMES = {
   classic:  { cols:['#e3001b','#006cb7','#f7b731','#00a650','#f47920','#9e2ca3','#1abc9c'],
               darks:['#a00013','#004a8f','#c77d0e','#007836','#b55c0f','#6a1c70','#0e8a6e'],
@@ -726,115 +604,59 @@ const THEMES = {
               desc:'For brightening every day with creativity and boundless energy! ☀️🧱' }
 };
 
-let currentTheme = 'classic', currentLayout = 'full';
+let currentTheme='classic', currentLayout='full';
 
-// ══════════════════════════════════════════════════════════════
-// BRICK DRAWING
-// ══════════════════════════════════════════════════════════════
 function drawBrick(ctx,x,y,w,h,bc,dc){
-  ctx.fillStyle=bc; ctx.beginPath(); roundRect(ctx,x,y+h*.18,w,h*.78,3); ctx.fill();
-  ctx.fillStyle=lighten(bc,20); ctx.beginPath(); roundRect(ctx,x+1,y+h*.18,w-2,h*.78-2,3); ctx.fill();
-  ctx.fillStyle=dc; ctx.beginPath(); roundRect(ctx,x,y+h*.84,w,h*.12+1,2); ctx.fill();
-  ctx.fillStyle=lighten(bc,38); ctx.fillRect(x+3,y+h*.19,w-6,2);
+  ctx.fillStyle=bc;ctx.beginPath();roundRect(ctx,x,y+h*.18,w,h*.78,3);ctx.fill();
+  ctx.fillStyle=lighten(bc,20);ctx.beginPath();roundRect(ctx,x+1,y+h*.18,w-2,h*.78-2,3);ctx.fill();
+  ctx.fillStyle=dc;ctx.beginPath();roundRect(ctx,x,y+h*.84,w,h*.12+1,2);ctx.fill();
+  ctx.fillStyle=lighten(bc,38);ctx.fillRect(x+3,y+h*.19,w-6,2);
   const sR=2,sC=4,r=Math.min(w,h)*.085,sH=r*1.1,gX=w/(sC+1),gY=(h*.58)/(sR+.5);
-  for(let i=0;i<sR;i++) for(let j=0;j<sC;j++){
+  for(let i=0;i<sR;i++)for(let j=0;j<sC;j++){
     const sx=x+gX*(j+1),sy=y+h*.18+gY*(i+.8);
-    ctx.fillStyle=dc; ctx.beginPath(); ctx.ellipse(sx,sy+sH*.5+1,r,r*.45,0,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle=bc; ctx.fillRect(sx-r,sy-sH*.2,r*2,sH*.75);
-    ctx.fillStyle=lighten(bc,22); ctx.beginPath(); ctx.ellipse(sx,sy-sH*.2,r,r*.45,0,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle=lighten(bc,42); ctx.beginPath(); ctx.ellipse(sx-r*.2,sy-sH*.2-1,r*.38,r*.18,-.4,0,Math.PI*2); ctx.fill();
-    ctx.strokeStyle=dc; ctx.lineWidth=.6; ctx.beginPath(); ctx.ellipse(sx,sy-sH*.2,r,r*.45,0,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle=dc;ctx.beginPath();ctx.ellipse(sx,sy+sH*.5+1,r,r*.45,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=bc;ctx.fillRect(sx-r,sy-sH*.2,r*2,sH*.75);
+    ctx.fillStyle=lighten(bc,22);ctx.beginPath();ctx.ellipse(sx,sy-sH*.2,r,r*.45,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=lighten(bc,42);ctx.beginPath();ctx.ellipse(sx-r*.2,sy-sH*.2-1,r*.38,r*.18,-.4,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=dc;ctx.lineWidth=.6;ctx.beginPath();ctx.ellipse(sx,sy-sH*.2,r,r*.45,0,0,Math.PI*2);ctx.stroke();
   }
 }
 function lighten(h,a){const c=parseInt(h.slice(1),16);return `rgb(${Math.min(255,(c>>16)+a)},${Math.min(255,((c>>8)&0xff)+a)},${Math.min(255,(c&0xff)+a)})`;}
 function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
 
-// ══════════════════════════════════════════════════════════════
-// LAYOUT PATTERNS
-// ══════════════════════════════════════════════════════════════
 const CW=960,CH=680,BW=60,BH=34;
 function layoutBricks(layout){
-  const B=[]; let ci=0;
+  const B=[];let ci=0;
   const row=(y,x0,x1,bw=BW,bh=BH)=>{for(let x=x0;x<x1;x+=bw)B.push({x,y,w:bw,h:bh,ci:ci++});};
   const col=(x,y0,y1,bw=BH,bh=BW)=>{for(let y=y0;y<y1;y+=bh)B.push({x,y,w:bw,h:bh,ci:ci++});};
   switch(layout){
-    case 'full': row(0,0,CW);row(CH-BH,0,CW);col(0,BH,CH-BH);col(CW-BH,BH,CH-BH); break;
-    case 'top-bottom': row(0,0,CW);row(CH-BH,0,CW); break;
-    case 'sides': col(0,0,CH);col(CW-BH,0,CH); break;
-    case 'top-only': row(0,0,CW); break;
-    case 'bottom-only': row(CH-BH,0,CW); break;
-    case 'corners':
-      for(let r=0;r<4;r++)for(let c=0;c<4;c++){
-        B.push({x:c*BH,y:r*BH,w:BH,h:BH,ci:ci++});B.push({x:CW-(4-c)*BH,y:r*BH,w:BH,h:BH,ci:ci++});
-        B.push({x:c*BH,y:CH-(4-r)*BH,w:BH,h:BH,ci:ci++});B.push({x:CW-(4-c)*BH,y:CH-(4-r)*BH,w:BH,h:BH,ci:ci++});
-      } break;
-    case 'thick-top': row(0,0,CW);row(BH,0,CW);row(BH*2,0,CW); break;
-    case 'double-border':
-      row(0,0,CW);row(CH-BH,0,CW);col(0,BH,CH-BH);col(CW-BH,BH,CH-BH);
-      row(BH*2,BH*2,CW-BH*2);row(CH-BH*3,BH*2,CW-BH*2);col(BH*2,BH*3,CH-BH*3);col(CW-BH*3,BH*3,CH-BH*3); break;
-    case 'checkerboard':
-      for(let x=0;x<CW;x+=BW*2){B.push({x,y:0,w:BW,h:BH,ci:ci++});B.push({x:x+BW,y:BH,w:BW,h:BH,ci:ci++});}
-      for(let x=0;x<CW;x+=BW*2){B.push({x,y:CH-BH,w:BW,h:BH,ci:ci++});B.push({x:x+BW,y:CH-BH*2,w:BW,h:BH,ci:ci++});}
-      for(let y=0;y<CH;y+=BH*2){B.push({x:0,y,w:BH,h:BH,ci:ci++});B.push({x:BH,y:y+BH,w:BH,h:BH,ci:ci++});}
-      for(let y=0;y<CH;y+=BH*2){B.push({x:CW-BH,y,w:BH,h:BH,ci:ci++});B.push({x:CW-BH*2,y:y+BH,w:BH,h:BH,ci:ci++});} break;
-    case 'rainbow': for(let i=0;i<5;i++)for(let x=0;x<CW;x+=BW)B.push({x,y:i*BH,w:BW,h:BH,ci:i}); break;
-    case 'zigzag':{const p=BW*4;
-      for(let x=0;x<CW;x+=BW){const ph=Math.floor(x/p*4)%4,yo=ph<2?ph:4-ph;B.push({x,y:yo*BH,w:BW,h:BH,ci:ci++});B.push({x,y:CH-BH-yo*BH,w:BW,h:BH,ci:ci++});}
-      for(let y=0;y<CH;y+=BH){const ph=Math.floor(y/BH)%4,xo=ph<2?ph:4-ph;B.push({x:xo*BH,y,w:BH,h:BH,ci:ci++});B.push({x:CW-BH-xo*BH,y,w:BH,h:BH,ci:ci++});} break;}
-    case 'staircase':
-      for(let i=0;i<6;i++)for(let j=0;j<=i;j++){
-        B.push({x:j*BH,y:i*BH,w:BH,h:BH,ci:ci++});B.push({x:CW-(j+1)*BH,y:i*BH,w:BH,h:BH,ci:ci++});
-        B.push({x:j*BH,y:CH-(i+1)*BH,w:BH,h:BH,ci:ci++});B.push({x:CW-(j+1)*BH,y:CH-(i+1)*BH,w:BH,h:BH,ci:ci++});
-      } break;
-    case 'diagonal-tl':
-      for(let i=0;i<Math.ceil((CW+CH)/BH);i++){const len=Math.min(i+1,8);for(let j=0;j<len;j++){const bx=i*BH-j*BH-BH,by=j*BH;if(bx>=0&&bx<CW&&by>=0&&by<CH)B.push({x:bx,y:by,w:BH,h:BH,ci:ci++});}} break;
-    case 'diagonal-tr':
-      for(let i=0;i<Math.ceil((CW+CH)/BH);i++){const len=Math.min(i+1,8);for(let j=0;j<len;j++){const bx=CW-i*BH+j*BH,by=j*BH;if(bx>=0&&bx<CW&&by>=0&&by<CH)B.push({x:bx,y:by,w:BH,h:BH,ci:ci++});}} break;
-    case 'arch':{const cx=CW/2,rx=CW*.46,ry=CH*.42;
-      for(let x=0;x<CW;x+=BH){const nx=(x+BH/2-cx)/rx;if(Math.abs(nx)<=1){const y=CH/2-ry*Math.sqrt(1-nx*nx);if(y>=0)B.push({x,y:Math.round(y/BH)*BH,w:BH,h:BH,ci:ci++});}}
-      row(CH-BH,0,CW,BH,BH); break;}
-    case 'diamond':{const mx=CW/2,my=CH/2,rx=CW*.47,ry=CH*.47;
-      for(let t=0;t<=360;t+=4){const rad=t*Math.PI/180,bx=Math.round((mx+rx*Math.cos(rad))/BH)*BH,by=Math.round((my+ry*Math.sin(rad))/BH)*BH;
-        if(bx>=0&&bx<CW&&by>=0&&by<CH&&!B.some(b=>b.x===bx&&b.y===by))B.push({x:bx,y:by,w:BH,h:BH,ci:ci++});} break;}
-    case 'scattered':
-      [[0,0],[BH,0],[BH*3,0],[BH*6,0],[BH*9,0],[BH*12,0],[BH*14,0],[CW-BH,0],[CW-BH*3,0],[CW-BH*5,0],
-       [0,BH],[0,BH*3],[0,BH*6],[0,BH*9],[0,BH*12],[0,BH*15],[CW-BH,BH],[CW-BH,BH*4],[CW-BH,BH*8],[CW-BH,BH*12],[CW-BH,BH*16],
-       [BH,CH-BH],[BH*4,CH-BH],[BH*8,CH-BH],[BH*12,CH-BH],[BH*15,CH-BH],[CW-BH*2,CH-BH],[CW-BH*5,CH-BH],[CW-BH*8,CH-BH],
-       [BH*2,BH*2],[BH*5,BH],[CW-BH*3,BH*3],[BH,CH-BH*3],[CW-BH*2,CH-BH*4]
-      ].forEach(([x,y])=>B.push({x,y,w:BH,h:BH,ci:ci++})); break;
-    case 'wave':
-      for(let x=0;x<CW;x+=BH){const t=x/CW*Math.PI*4,yT=Math.round((BH+Math.sin(t)*BH*1.5)/BH)*BH,yB=Math.round((CH-BH*3+Math.sin(t+Math.PI)*BH*1.5)/BH)*BH;
-        B.push({x,y:Math.max(0,yT),w:BH,h:BH,ci:ci++});B.push({x,y:Math.min(CH-BH,yB),w:BH,h:BH,ci:ci++});} break;
-    case 'left-accent': col(0,0,CH);col(BH,0,CH);col(BH*2,0,CH);row(0,BH*3,CW);row(CH-BH,BH*3,CW); break;
-    case 'cross':
-      row(Math.floor(CH/2/BH)*BH,0,CW,BH,BH);row(Math.floor(CH/2/BH)*BH-BH,0,CW,BH,BH);
-      col(Math.floor(CW/2/BH)*BH,0,CH,BH,BH);col(Math.floor(CW/2/BH)*BH-BH,0,CH,BH,BH); break;
+    case 'full':row(0,0,CW);row(CH-BH,0,CW);col(0,BH,CH-BH);col(CW-BH,BH,CH-BH);break;
+    case 'top-bottom':row(0,0,CW);row(CH-BH,0,CW);break;
+    case 'sides':col(0,0,CH);col(CW-BH,0,CH);break;
+    case 'top-only':row(0,0,CW);break;
+    case 'bottom-only':row(CH-BH,0,CW);break;
+    case 'corners':for(let r=0;r<4;r++)for(let c=0;c<4;c++){B.push({x:c*BH,y:r*BH,w:BH,h:BH,ci:ci++});B.push({x:CW-(4-c)*BH,y:r*BH,w:BH,h:BH,ci:ci++});B.push({x:c*BH,y:CH-(4-r)*BH,w:BH,h:BH,ci:ci++});B.push({x:CW-(4-c)*BH,y:CH-(4-r)*BH,w:BH,h:BH,ci:ci++});}break;
+    case 'thick-top':row(0,0,CW);row(BH,0,CW);row(BH*2,0,CW);break;
+    case 'double-border':row(0,0,CW);row(CH-BH,0,CW);col(0,BH,CH-BH);col(CW-BH,BH,CH-BH);row(BH*2,BH*2,CW-BH*2);row(CH-BH*3,BH*2,CW-BH*2);col(BH*2,BH*3,CH-BH*3);col(CW-BH*3,BH*3,CH-BH*3);break;
+    case 'checkerboard':for(let x=0;x<CW;x+=BW*2){B.push({x,y:0,w:BW,h:BH,ci:ci++});B.push({x:x+BW,y:BH,w:BW,h:BH,ci:ci++});}for(let x=0;x<CW;x+=BW*2){B.push({x,y:CH-BH,w:BW,h:BH,ci:ci++});B.push({x:x+BW,y:CH-BH*2,w:BW,h:BH,ci:ci++});}for(let y=0;y<CH;y+=BH*2){B.push({x:0,y,w:BH,h:BH,ci:ci++});B.push({x:BH,y:y+BH,w:BH,h:BH,ci:ci++});}for(let y=0;y<CH;y+=BH*2){B.push({x:CW-BH,y,w:BH,h:BH,ci:ci++});B.push({x:CW-BH*2,y:y+BH,w:BH,h:BH,ci:ci++});}break;
+    case 'rainbow':for(let i=0;i<5;i++)for(let x=0;x<CW;x+=BW)B.push({x,y:i*BH,w:BW,h:BH,ci:i});break;
+    case 'zigzag':{const p=BW*4;for(let x=0;x<CW;x+=BW){const ph=Math.floor(x/p*4)%4,yo=ph<2?ph:4-ph;B.push({x,y:yo*BH,w:BW,h:BH,ci:ci++});B.push({x,y:CH-BH-yo*BH,w:BW,h:BH,ci:ci++});}for(let y=0;y<CH;y+=BH){const ph=Math.floor(y/BH)%4,xo=ph<2?ph:4-ph;B.push({x:xo*BH,y,w:BH,h:BH,ci:ci++});B.push({x:CW-BH-xo*BH,y,w:BH,h:BH,ci:ci++});}break;}
+    case 'staircase':for(let i=0;i<6;i++)for(let j=0;j<=i;j++){B.push({x:j*BH,y:i*BH,w:BH,h:BH,ci:ci++});B.push({x:CW-(j+1)*BH,y:i*BH,w:BH,h:BH,ci:ci++});B.push({x:j*BH,y:CH-(i+1)*BH,w:BH,h:BH,ci:ci++});B.push({x:CW-(j+1)*BH,y:CH-(i+1)*BH,w:BH,h:BH,ci:ci++});}break;
+    case 'diagonal-tl':for(let i=0;i<Math.ceil((CW+CH)/BH);i++){const len=Math.min(i+1,8);for(let j=0;j<len;j++){const bx=i*BH-j*BH-BH,by=j*BH;if(bx>=0&&bx<CW&&by>=0&&by<CH)B.push({x:bx,y:by,w:BH,h:BH,ci:ci++});}}break;
+    case 'diagonal-tr':for(let i=0;i<Math.ceil((CW+CH)/BH);i++){const len=Math.min(i+1,8);for(let j=0;j<len;j++){const bx=CW-i*BH+j*BH,by=j*BH;if(bx>=0&&bx<CW&&by>=0&&by<CH)B.push({x:bx,y:by,w:BH,h:BH,ci:ci++});}}break;
+    case 'arch':{const cx=CW/2,rx=CW*.46,ry=CH*.42;for(let x=0;x<CW;x+=BH){const nx=(x+BH/2-cx)/rx;if(Math.abs(nx)<=1){const y=CH/2-ry*Math.sqrt(1-nx*nx);if(y>=0)B.push({x,y:Math.round(y/BH)*BH,w:BH,h:BH,ci:ci++});}}row(CH-BH,0,CW,BH,BH);break;}
+    case 'diamond':{const mx=CW/2,my=CH/2,rx=CW*.47,ry=CH*.47;for(let t=0;t<=360;t+=4){const rad=t*Math.PI/180,bx=Math.round((mx+rx*Math.cos(rad))/BH)*BH,by=Math.round((my+ry*Math.sin(rad))/BH)*BH;if(bx>=0&&bx<CW&&by>=0&&by<CH&&!B.some(b=>b.x===bx&&b.y===by))B.push({x:bx,y:by,w:BH,h:BH,ci:ci++});}break;}
+    case 'scattered':[[0,0],[BH,0],[BH*3,0],[BH*6,0],[BH*9,0],[BH*12,0],[BH*14,0],[CW-BH,0],[CW-BH*3,0],[CW-BH*5,0],[0,BH],[0,BH*3],[0,BH*6],[0,BH*9],[0,BH*12],[0,BH*15],[CW-BH,BH],[CW-BH,BH*4],[CW-BH,BH*8],[CW-BH,BH*12],[CW-BH,BH*16],[BH,CH-BH],[BH*4,CH-BH],[BH*8,CH-BH],[BH*12,CH-BH],[BH*15,CH-BH],[CW-BH*2,CH-BH],[CW-BH*5,CH-BH],[CW-BH*8,CH-BH],[BH*2,BH*2],[BH*5,BH],[CW-BH*3,BH*3],[BH,CH-BH*3],[CW-BH*2,CH-BH*4]].forEach(([x,y])=>B.push({x,y,w:BH,h:BH,ci:ci++}));break;
+    case 'wave':for(let x=0;x<CW;x+=BH){const t=x/CW*Math.PI*4,yT=Math.round((BH+Math.sin(t)*BH*1.5)/BH)*BH,yB=Math.round((CH-BH*3+Math.sin(t+Math.PI)*BH*1.5)/BH)*BH;B.push({x,y:Math.max(0,yT),w:BH,h:BH,ci:ci++});B.push({x,y:Math.min(CH-BH,yB),w:BH,h:BH,ci:ci++});}break;
+    case 'left-accent':col(0,0,CH);col(BH,0,CH);col(BH*2,0,CH);row(0,BH*3,CW);row(CH-BH,BH*3,CW);break;
+    case 'cross':row(Math.floor(CH/2/BH)*BH,0,CW,BH,BH);row(Math.floor(CH/2/BH)*BH-BH,0,CW,BH,BH);col(Math.floor(CW/2/BH)*BH,0,CH,BH,BH);col(Math.floor(CW/2/BH)*BH-BH,0,CH,BH,BH);break;
   }
   return B;
 }
 
-const INSET={
-  'full':{t:46,r:46,b:46,l:46},'top-bottom':{t:46,r:8,b:46,l:8},'sides':{t:8,r:46,b:8,l:46},
-  'top-only':{t:46,r:8,b:8,l:8},'bottom-only':{t:8,r:8,b:46,l:8},'corners':{t:10,r:10,b:10,l:10},
-  'thick-top':{t:107,r:8,b:8,l:8},'double-border':{t:106,r:106,b:106,l:106},'checkerboard':{t:70,r:70,b:70,l:70},
-  'rainbow':{t:175,r:8,b:8,l:8},'zigzag':{t:104,r:104,b:104,l:104},'staircase':{t:10,r:10,b:10,l:10},
-  'diagonal-tl':{t:10,r:10,b:10,l:10},'diagonal-tr':{t:10,r:10,b:10,l:10},'arch':{t:46,r:8,b:46,l:8},
-  'diamond':{t:10,r:10,b:10,l:10},'scattered':{t:10,r:10,b:10,l:10},'wave':{t:46,r:8,b:46,l:8},
-  'left-accent':{t:46,r:8,b:46,l:110},'cross':{t:10,r:10,b:10,l:10}
-};
-const LAYOUT_TITLES={
-  'full':'Speed Build Challenge','top-bottom':'Speed Build Award','sides':'Builder Certificate',
-  'top-only':'Rising Star Award','bottom-only':'Foundation Builder','corners':'Master Builder',
-  'thick-top':'Grand Achievement','double-border':'Elite Builder Award','checkerboard':'Brick Champion',
-  'rainbow':'Rainbow Builder','zigzag':'Zigzag Creator','staircase':'Staircase Achiever',
-  'diagonal-tl':'Trail Blazer Award','diagonal-tr':'Pathfinder Award','arch':'Arch Builder Award',
-  'diamond':'Diamond Builder','scattered':'Star Builder Award','wave':'Wave Maker Award',
-  'left-accent':'Champion Builder','cross':'Legend Builder'
-};
+const INSET={'full':{t:46,r:46,b:46,l:46},'top-bottom':{t:46,r:8,b:46,l:8},'sides':{t:8,r:46,b:8,l:46},'top-only':{t:46,r:8,b:8,l:8},'bottom-only':{t:8,r:8,b:46,l:8},'corners':{t:10,r:10,b:10,l:10},'thick-top':{t:107,r:8,b:8,l:8},'double-border':{t:106,r:106,b:106,l:106},'checkerboard':{t:70,r:70,b:70,l:70},'rainbow':{t:175,r:8,b:8,l:8},'zigzag':{t:104,r:104,b:104,l:104},'staircase':{t:10,r:10,b:10,l:10},'diagonal-tl':{t:10,r:10,b:10,l:10},'diagonal-tr':{t:10,r:10,b:10,l:10},'arch':{t:46,r:8,b:46,l:8},'diamond':{t:10,r:10,b:10,l:10},'scattered':{t:10,r:10,b:10,l:10},'wave':{t:46,r:8,b:46,l:8},'left-accent':{t:46,r:8,b:46,l:110},'cross':{t:10,r:10,b:10,l:10}};
+const LAYOUT_TITLES={'full':'Speed Build Challenge','top-bottom':'Speed Build Award','sides':'Builder Certificate','top-only':'Rising Star Award','bottom-only':'Foundation Builder','corners':'Master Builder','thick-top':'Grand Achievement','double-border':'Elite Builder Award','checkerboard':'Brick Champion','rainbow':'Rainbow Builder','zigzag':'Zigzag Creator','staircase':'Staircase Achiever','diagonal-tl':'Trail Blazer Award','diagonal-tr':'Pathfinder Award','arch':'Arch Builder Award','diamond':'Diamond Builder','scattered':'Star Builder Award','wave':'Wave Maker Award','left-accent':'Champion Builder','cross':'Legend Builder'};
 
-// ══════════════════════════════════════════════════════════════
-// DRAW BRICKS
-// ══════════════════════════════════════════════════════════════
 function redrawBricks(){
   const canvas=document.getElementById('brick-canvas'),ctx=canvas.getContext('2d');
   ctx.clearRect(0,0,CW,CH);
@@ -844,7 +666,6 @@ function redrawBricks(){
     if(x<0||y<0||x+w>CW+10||y+h>CH+10)return;
     drawBrick(ctx,x,y,w,h,th.cols[Math.abs(ci)%th.cols.length],th.darks[Math.abs(ci)%th.darks.length]);
   });
-  // Update sparkle colors to match theme
   document.querySelectorAll('.spark').forEach((s,i)=>{s.style.color=th.cols[i%th.cols.length];});
 }
 
@@ -856,9 +677,6 @@ function applyInset(){
   badge.style.top=(ins.t+5)+'px';badge.style.right=(ins.r+5)+'px';
 }
 
-// ══════════════════════════════════════════════════════════════
-// THEME / LAYOUT SWITCHES
-// ══════════════════════════════════════════════════════════════
 function setTheme(name){
   currentTheme=name;
   const page=document.getElementById('the-page');
@@ -866,12 +684,8 @@ function setTheme(name){
   page.classList.add('t-'+name);
   document.querySelectorAll('.t-pill').forEach(p=>p.classList.remove('active'));
   document.querySelector(`[data-theme="${name}"]`).classList.add('active');
-  // Only update stars if not manually overridden
-  if(!document.getElementById('stars-input').value.trim())
-    document.getElementById('stars-line').textContent=THEMES[name].stars;
-  // Only update desc if not manually overridden
-  if(!document.getElementById('desc-input').value.trim())
-    document.getElementById('desc-text').innerHTML=THEMES[name].desc;
+  if(!document.getElementById('stars-input').value.trim())document.getElementById('stars-line').textContent=THEMES[name].stars;
+  if(!document.getElementById('desc-input').value.trim())document.getElementById('desc-text').innerHTML=THEMES[name].desc;
   redrawBricks();updateMiniBricks();buildNameBricks(document.getElementById('name-input').value);
   if(sigCtx)sigCtx.strokeStyle=THEMES[name].sigCol;
 }
@@ -881,21 +695,14 @@ function setLayout(name){
   document.querySelectorAll('.l-pill').forEach(p=>p.classList.remove('active'));
   document.querySelector(`[data-layout="${name}"]`).classList.add('active');
   redrawBricks();applyInset();
-  if(!document.getElementById('title-input').value.trim())
-    document.getElementById('cert-title').textContent=LAYOUT_TITLES[name]||'Speed Build Challenge';
+  if(!document.getElementById('title-input').value.trim())document.getElementById('cert-title').textContent=LAYOUT_TITLES[name]||'Speed Build Challenge';
 }
 
-// ══════════════════════════════════════════════════════════════
-// MINI BRICKS
-// ══════════════════════════════════════════════════════════════
 function updateMiniBricks(){
   const th=THEMES[currentTheme];
   for(let i=0;i<8;i++){const el=document.getElementById('mb'+i);if(el)el.style.background=th.cols[i%th.cols.length];}
 }
 
-// ══════════════════════════════════════════════════════════════
-// NAME BRICKS
-// ══════════════════════════════════════════════════════════════
 function sizeClass(n){if(n<=6)return 'brick-xl';if(n<=9)return 'brick-lg';if(n<=13)return 'brick-md';if(n<=17)return 'brick-sm';return 'brick-xs';}
 function buildNameBricks(name){
   const c=document.getElementById('name-bricks');c.innerHTML='';
@@ -905,7 +712,7 @@ function buildNameBricks(name){
   let ci=0;
   letters.forEach(ltr=>{
     if(ltr===' '){const sp=document.createElement('div');sp.style.width=(spW[sz]||8)+'px';c.appendChild(sp);return;}
-    const col=th.cols[ci%th.cols.length],drk=th.darks[ci%th.darks.length]; ci++;
+    const col=th.cols[ci%th.cols.length],drk=th.darks[ci%th.darks.length];ci++;
     const brick=document.createElement('div');
     brick.className='lego-letter '+sz;
     brick.style.cssText=`background:${col};border-color:${drk};box-shadow:0 3px 0 ${drk};`;
@@ -914,9 +721,6 @@ function buildNameBricks(name){
   });
 }
 
-// ══════════════════════════════════════════════════════════════
-// PLACEMENT BADGE
-// ══════════════════════════════════════════════════════════════
 function updatePlacement(val){
   const badge=document.getElementById('placement-badge'),numEl=document.getElementById('placement-num');
   const v=val.trim();
@@ -931,199 +735,117 @@ function updatePlacement(val){
   badge.style.display='flex';
 }
 
-// ══════════════════════════════════════════════════════════════
-// STATS / AGE / DATE / ORG / TITLE / DESC / STARS / CERTNUM
-// ══════════════════════════════════════════════════════════════
 function updateStats(){
   const tv=document.getElementById('time-input').value.trim(),sv=document.getElementById('set-input').value.trim();
   document.getElementById('time-display').textContent=tv;document.getElementById('set-display').textContent=sv;
   document.getElementById('time-chip').style.display=tv?'flex':'none';
   document.getElementById('set-chip').style.display=sv?'flex':'none';
 }
-function updateAge(val){
-  const v=val.trim(),b=document.getElementById('age-badge');
-  b.style.display=v?'inline-flex':'none';document.getElementById('age-display').textContent=v?'Ages '+v:'';
-}
-function updateDate(val){
-  const v=val.trim(),b=document.getElementById('date-block');
-  b.style.display=v?'flex':'none';document.getElementById('date-display').textContent=v;
-}
+function updateAge(val){const v=val.trim(),b=document.getElementById('age-badge');b.style.display=v?'inline-flex':'none';document.getElementById('age-display').textContent=v?'Ages '+v:'';}
+function updateDate(val){const v=val.trim(),b=document.getElementById('date-block');b.style.display=v?'flex':'none';document.getElementById('date-display').textContent=v;}
 function updateOrg(val){document.getElementById('org-display').textContent=val.trim()||'Your Organisation';}
-function updateTitle(val){
-  const v=val.trim();
-  document.getElementById('cert-title').textContent=v||LAYOUT_TITLES[currentLayout]||'Speed Build Challenge';
-}
-function updateDesc(val){
-  const v=val.trim();
-  document.getElementById('desc-text').innerHTML=v||THEMES[currentTheme].desc;
-}
-function updateStars(val){
-  const v=val.trim();
-  document.getElementById('stars-line').textContent=v||THEMES[currentTheme].stars;
-}
-function updateCertNum(val){
-  const v=val.trim(),el=document.getElementById('cert-serial');
-  el.style.display=v?'block':'none';el.textContent=v?'No. '+v:'';
-}
+function updateTitle(val){const v=val.trim();document.getElementById('cert-title').textContent=v||LAYOUT_TITLES[currentLayout]||'Speed Build Challenge';}
+function updateDesc(val){const v=val.trim();document.getElementById('desc-text').innerHTML=v||THEMES[currentTheme].desc;}
+function updateStars(val){const v=val.trim();document.getElementById('stars-line').textContent=v||THEMES[currentTheme].stars;}
+function updateCertNum(val){const v=val.trim(),el=document.getElementById('cert-serial');el.style.display=v?'block':'none';el.textContent=v?'No. '+v:'';}
 
-// ══════════════════════════════════════════════════════════════
-// DECORATIONS
-// ══════════════════════════════════════════════════════════════
 function toggleTrophy(on){document.getElementById('trophy-wm').style.display=on?'block':'none';}
 function toggleSparkles(on){document.getElementById('sparkle-wrap').style.display=on?'block':'none';}
 function toggleMiniBricks(on){document.getElementById('mini-bricks-row').style.display=on?'flex':'none';}
 
-// ══════════════════════════════════════════════════════════════
-// QUICK PRESETS
-// ══════════════════════════════════════════════════════════════
 function applyPreset(type){
-  const pi=document.getElementById('placement-input');
-  const ti=document.getElementById('title-input');
-  const di=document.getElementById('desc-input');
-  if(type==='1st'){
-    pi.value='1st'; updatePlacement('1st'); markFilled(pi);
-    if(!ti.value) { document.getElementById('cert-title').textContent='Speed Build Champion'; }
-  } else if(type==='2nd'){
-    pi.value='2nd'; updatePlacement('2nd'); markFilled(pi);
-  } else if(type==='3rd'){
-    pi.value='3rd'; updatePlacement('3rd'); markFilled(pi);
-  } else {
-    pi.value=''; updatePlacement(''); pi.classList.remove('filled');
-    if(!ti.value) document.getElementById('cert-title').textContent='Certificate of Participation';
-    if(!di.value) document.getElementById('desc-text').innerHTML=
-      'For taking part in the LEGO Speed Build Challenge with fantastic enthusiasm and effort! 🧱⭐';
-  }
+  const pi=document.getElementById('placement-input'),ti=document.getElementById('title-input'),di=document.getElementById('desc-input');
+  if(type==='1st'){pi.value='1st';updatePlacement('1st');markFilled(pi);if(!ti.value)document.getElementById('cert-title').textContent='Speed Build Champion';}
+  else if(type==='2nd'){pi.value='2nd';updatePlacement('2nd');markFilled(pi);}
+  else if(type==='3rd'){pi.value='3rd';updatePlacement('3rd');markFilled(pi);}
+  else{pi.value='';updatePlacement('');pi.classList.remove('filled');if(!ti.value)document.getElementById('cert-title').textContent='Certificate of Participation';if(!di.value)document.getElementById('desc-text').innerHTML='For taking part in the LEGO Speed Build Challenge with fantastic enthusiasm and effort! 🧱⭐';}
   checkReady();
 }
 
-// ══════════════════════════════════════════════════════════════
-// MULTIPLE NAMES
-// ══════════════════════════════════════════════════════════════
-let namesList=[], nameIdx=0;
-function parseNamesList(val){
-  const raw=val.split(',').map(s=>s.trim()).filter(Boolean);
-  namesList=raw.length>1?raw:[];
-  nameIdx=0;
-  updateNameNav();
-  if(namesList.length>0) setCurrentName();
-}
-function setCurrentName(){
-  const ni=document.getElementById('name-input');
-  ni.value=namesList[nameIdx];
-  buildNameBricks(namesList[nameIdx]);
-  updateCharCount(namesList[nameIdx],'name-chars',24);
-  markFilled(ni);
-}
-function updateNameNav(){
-  const prev=document.getElementById('name-prev'),next=document.getElementById('name-next'),ct=document.getElementById('name-ct');
-  const has=namesList.length>1;
-  prev.disabled=!has||nameIdx===0; next.disabled=!has||nameIdx===namesList.length-1;
-  ct.textContent=has?`${nameIdx+1} / ${namesList.length}`:'—';
-}
-function stepName(dir){
-  nameIdx=Math.max(0,Math.min(namesList.length-1,nameIdx+dir));
-  setCurrentName(); updateNameNav();
-}
+let namesList=[],nameIdx=0;
+function parseNamesList(val){const raw=val.split(',').map(s=>s.trim()).filter(Boolean);namesList=raw.length>1?raw:[];nameIdx=0;updateNameNav();if(namesList.length>0)setCurrentName();}
+function setCurrentName(){const ni=document.getElementById('name-input');ni.value=namesList[nameIdx];buildNameBricks(namesList[nameIdx]);updateCharCount(namesList[nameIdx],'name-chars',24);markFilled(ni);}
+function updateNameNav(){const prev=document.getElementById('name-prev'),next=document.getElementById('name-next'),ct=document.getElementById('name-ct');const has=namesList.length>1;prev.disabled=!has||nameIdx===0;next.disabled=!has||nameIdx===namesList.length-1;ct.textContent=has?`${nameIdx+1} / ${namesList.length}`:'—';}
+function stepName(dir){nameIdx=Math.max(0,Math.min(namesList.length-1,nameIdx+dir));setCurrentName();updateNameNav();}
 
-// ══════════════════════════════════════════════════════════════
-// ACCORDION
-// ══════════════════════════════════════════════════════════════
 function toggleSec(hd){hd.parentElement.classList.toggle('open');}
 
-// ══════════════════════════════════════════════════════════════
-// ZOOM
-// ══════════════════════════════════════════════════════════════
 function applyZoom(pct){
   const scale=pct/100;
   document.getElementById('cert-zoom-outer').style.transform=`scale(${scale})`;
   document.getElementById('cert-zoom-outer').style.transformOrigin='top center';
   document.getElementById('zoom-val').textContent=pct+'%';
   const slider=document.getElementById('zoom-slider');
-  const min=+slider.min,max=+slider.max;
-  slider.style.setProperty('--pct',((pct-min)/(max-min)*100)+'%');
-  // Adjust container height so page doesn't clip
-  const outer=document.getElementById('cert-zoom-outer');
-  outer.parentElement.style.height=(680*scale+48)+'px';
+  slider.style.setProperty('--pct',((pct-+slider.min)/(+slider.max-+slider.min)*100)+'%');
+  document.getElementById('cert-zoom-outer').parentElement.style.height=(680*scale+48)+'px';
 }
 
-// ══════════════════════════════════════════════════════════════
-// FIELD HELPERS
-// ══════════════════════════════════════════════════════════════
-function markFilled(input){
-  input.classList.toggle('filled',input.value.trim().length>0);
-  checkReady();
-}
-function updateCharCount(val,id,max){
-  const el=document.getElementById(id),n=val.length;
-  el.textContent=`${n} / ${max}`;
-  el.classList.toggle('warn',n>max*.8);
-  el.classList.toggle('over',n>=max);
-}
-function checkReady(){
-  const name=document.getElementById('name-input').value.trim();
-  const badge=document.getElementById('ready-badge');
-  badge.style.display=name?'flex':'none';
+// ══════════════════════════════════════════════════════
+// ✅ FIX #1 — printCert(): snapshot canvases before printing
+// ══════════════════════════════════════════════════════
+function printCert(){
+  const brickCanvas = document.getElementById('brick-canvas');
+  const sigCanvas   = document.getElementById('sig1');
+  const brickImg    = document.getElementById('brick-print-img');
+  const sigImg      = document.getElementById('sig-print-img');
+
+  // Capture current canvas state as PNG data URLs
+  brickImg.src = brickCanvas.toDataURL('image/png');
+  sigImg.src   = sigCanvas.toDataURL('image/png');
+
+  // Hide live canvases (print CSS also handles this, but belt-and-suspenders)
+  brickCanvas.style.visibility = 'hidden';
+  sigCanvas.style.visibility   = 'hidden';
+
+  window.print();
+
+  // Restore after print dialog closes
+  brickCanvas.style.visibility = '';
+  sigCanvas.style.visibility   = '';
 }
 
-// ══════════════════════════════════════════════════════════════
-// RESET ALL
-// ══════════════════════════════════════════════════════════════
+function markFilled(input){input.classList.toggle('filled',input.value.trim().length>0);checkReady();}
+function updateCharCount(val,id,max){const el=document.getElementById(id),n=val.length;el.textContent=`${n} / ${max}`;el.classList.toggle('warn',n>max*.8);el.classList.toggle('over',n>=max);}
+function checkReady(){const name=document.getElementById('name-input').value.trim();document.getElementById('ready-badge').style.display=name?'flex':'none';}
+
 function resetAll(){
   if(!confirm('Clear everything and start fresh?'))return;
-  ['name-input','placement-input','time-input','set-input','age-input','date-input',
-   'title-input','desc-input','stars-input','certnum-input','names-list','org-input'
-  ].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el){el.value=id==='org-input'?'Islamic Center of Brushy Creek':'';el.classList.remove('filled');}
-  });
-  document.getElementById('trophy-tog').checked=false; toggleTrophy(false);
-  document.getElementById('sparkle-tog').checked=false; toggleSparkles(false);
-  document.getElementById('minibricks-tog').checked=true; toggleMiniBricks(true);
+  ['name-input','placement-input','time-input','set-input','age-input','date-input','title-input','desc-input','stars-input','certnum-input','names-list','org-input'].forEach(id=>{const el=document.getElementById(id);if(el){el.value=id==='org-input'?'Islamic Center of Brushy Creek':'';el.classList.remove('filled');}});
+  document.getElementById('trophy-tog').checked=false;toggleTrophy(false);
+  document.getElementById('sparkle-tog').checked=false;toggleSparkles(false);
+  document.getElementById('minibricks-tog').checked=true;toggleMiniBricks(true);
   namesList=[];nameIdx=0;updateNameNav();
   updatePlacement('');updateStats();updateAge('');updateDate('');
   updateOrg('Islamic Center of Brushy Creek');
   updateTitle('');updateDesc('');updateStars('');updateCertNum('');
   document.getElementById('name-chars').textContent='0 / 24';
-  buildNameBricks('YOUR NAME');
-  clearSig();
-  checkReady();
+  buildNameBricks('YOUR NAME');clearSig();checkReady();
 }
 
-// ══════════════════════════════════════════════════════════════
-// SIGNATURE
-// ══════════════════════════════════════════════════════════════
 let sigCtx;
 function initSig(){
   const canvas=document.getElementById('sig1'),ctx=canvas.getContext('2d');
-  ctx.strokeStyle=THEMES[currentTheme].sigCol;
-  ctx.lineWidth=1.8;ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.strokeStyle=THEMES[currentTheme].sigCol;ctx.lineWidth=1.8;ctx.lineCap='round';ctx.lineJoin='round';
   let down=false;
   const pos=e=>{const r=canvas.getBoundingClientRect();return e.touches?{x:e.touches[0].clientX-r.left,y:e.touches[0].clientY-r.top}:{x:e.clientX-r.left,y:e.clientY-r.top};};
-  canvas.addEventListener('mousedown', e=>{down=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
-  canvas.addEventListener('mousemove', e=>{if(!down)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
-  canvas.addEventListener('mouseup',   ()=>down=false);
+  canvas.addEventListener('mousedown',e=>{down=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+  canvas.addEventListener('mousemove',e=>{if(!down)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
+  canvas.addEventListener('mouseup',()=>down=false);
   canvas.addEventListener('mouseleave',()=>down=false);
   canvas.addEventListener('touchstart',e=>{e.preventDefault();down=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
-  canvas.addEventListener('touchmove', e=>{if(!down)return;e.preventDefault();const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();},{passive:false});
-  canvas.addEventListener('touchend',  ()=>down=false);
+  canvas.addEventListener('touchmove',e=>{if(!down)return;e.preventDefault();const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();},{passive:false});
+  canvas.addEventListener('touchend',()=>down=false);
   return ctx;
 }
-function clearSig(){const c=document.getElementById('sig1');c.getContext('2d').clearRect(0,0,c.width,c.height);}
+function clearSig(){document.getElementById('sig1').getContext('2d').clearRect(0,0,180,44);}
 
-// ══════════════════════════════════════════════════════════════
-// WIRE EVENTS
-// ══════════════════════════════════════════════════════════════
 document.querySelectorAll('.t-pill').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.theme)));
 document.querySelectorAll('.l-pill').forEach(b=>b.addEventListener('click',()=>setLayout(b.dataset.layout)));
 
-// ══════════════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════════════
 window.addEventListener('load',()=>{
-  redrawBricks(); applyInset(); updateMiniBricks();
-  buildNameBricks('YOUR NAME'); sigCtx=initSig();
+  redrawBricks();applyInset();updateMiniBricks();
+  buildNameBricks('YOUR NAME');sigCtx=initSig();
   applyZoom(82);
-  // Pre-fill name input display
   document.getElementById('name-input').value='';
   document.getElementById('name-chars').textContent='0 / 24';
 });
