@@ -275,25 +275,65 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
 .t-sunshine .date-value{color:#c08040;} .t-sunshine .date-label-text{color:#c08040;}
 .t-sunshine .cert-serial{color:#c08040;}
 
-/* ══ PRINT — ALL 3 FIXES APPLIED ══ */
+/* ══════════════════════════════════════════════════════════════════
+   PRINT — FIXED
+   Root cause of the cutoff: the old rule was
+       @page{size:landscape; margin:0;}
+       .page{width:100vw !important; height:100vh !important;}
+   That stretched the page to whatever paper the user has (Letter:
+   1.294 ratio vs the cert's 1.412), and 100vh in print mode is
+   famously unreliable in Chromium. Everything inside .cert-content
+   is laid out with FIXED PIXEL positions designed for 960×680, so
+   the inner flex content (signature row in particular) reflowed
+   out of the printable area and got clipped.
+
+   Fix: lock .page to its native design size (960×680px) and match
+   @page exactly (10in × 7.0833in @ 96dpi). PDF export becomes a
+   pixel-perfect 1:1 reproduction. For physical Letter/A4 paper,
+   the browser will scale the @page box to fit the sheet — choose
+   "Fit to page" / "Default scale" in the print dialog, and make
+   sure "Background graphics" is ENABLED.
+   ══════════════════════════════════════════════════════════════════ */
 @media print{
-  /* FIX #2: Use landscape keyword — avoids inch/px mismatch */
-  @page{size:landscape;margin:0;}
-  body{background:#fff !important;display:block;height:auto;overflow:visible;}
+  @page{size:10in 7.0833in;margin:0;}
+
+  html,body{
+    margin:0 !important;padding:0 !important;
+    width:10in !important;height:7.0833in !important;
+    background:#fff !important;overflow:hidden !important;
+  }
+  body{display:block !important;}
   #topbar,#sidebar{display:none !important;}
-  #layout{display:block;}
-  /* FIX #3: Remove zoom, reset padding */
-  #cert-area{padding:0 !important;display:block !important;overflow:visible;}
-  #cert-zoom-outer{transform:none !important;transform-origin:top left !important;}
-  /* FIX #2 cont: Fill the full print page */
-  .page{width:100vw !important;height:100vh !important;box-shadow:none !important;border-radius:0 !important;overflow:visible !important;}
-  /* FIX #1: Hide live canvas; JS-injected img takes over */
+  #layout{display:block !important;}
+
+  #cert-area{
+    padding:0 !important;margin:0 !important;
+    display:block !important;overflow:hidden !important;
+    width:10in !important;height:7.0833in !important;
+  }
+  #cert-zoom-outer{
+    transform:none !important;transform-origin:top left !important;
+    margin:0 !important;padding:0 !important;
+    width:960px !important;height:680px !important;
+  }
+
+  /* Lock to native design size — DO NOT stretch with 100vw/100vh */
+  .page{
+    width:960px !important;height:680px !important;
+    margin:0 !important;
+    box-shadow:none !important;border-radius:0 !important;
+    overflow:hidden !important;
+    page-break-inside:avoid !important;
+    page-break-after:avoid !important;
+  }
+
+  /* Hide live canvases; show the PNG snapshots captured in printCert() */
   #brick-canvas{display:none !important;}
   .sig-canvas-wrap canvas{display:none !important;}
-  /* Show the snapshot images injected by printCert() */
-  #brick-print-img{display:block !important;}
+  #brick-print-img{display:block !important;width:960px !important;height:680px !important;}
   #sig-print-img{display:block !important;}
   .sig-clear-btn{display:none !important;}
+
   *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
 }
 /* Keep print-only imgs hidden on screen */
@@ -316,7 +356,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
   <div id="ready-badge">Ready to print!</div>
   <div class="top-btns">
     <button class="icon-btn" onclick="resetAll()">↺ Reset</button>
-    <!-- FIX #1: printCert() instead of window.print() -->
     <button class="print-btn" onclick="printCert()">🖨️ Print / PDF</button>
   </div>
 </header>
@@ -495,7 +534,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
   <div class="page t-classic" id="the-page">
 
     <canvas id="brick-canvas" width="960" height="680"></canvas>
-    <!-- FIX #1: Pre-created snapshot img, hidden on screen, shown during print -->
     <img id="brick-print-img" alt="">
 
     <div class="placement-badge" id="placement-badge">
@@ -555,7 +593,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
         <div class="sig-block">
           <div class="sig-canvas-wrap">
             <canvas id="sig1" width="180" height="44"></canvas>
-            <!-- FIX #1: signature snapshot img -->
             <img id="sig-print-img" alt="signature">
             <button class="sig-clear-btn" onclick="clearSig()">✕</button>
           </div>
@@ -781,7 +818,9 @@ function applyZoom(pct){
 }
 
 // ══════════════════════════════════════════════════════
-// ✅ FIX #1 — printCert(): snapshot canvases before printing
+// printCert(): snapshot canvases to <img> before printing,
+// and wait for the data: URLs to actually decode so the
+// print dialog never opens with empty <img> elements.
 // ══════════════════════════════════════════════════════
 function printCert(){
   const brickCanvas = document.getElementById('brick-canvas');
@@ -793,15 +832,18 @@ function printCert(){
   brickImg.src = brickCanvas.toDataURL('image/png');
   sigImg.src   = sigCanvas.toDataURL('image/png');
 
-  // Hide live canvases (print CSS also handles this, but belt-and-suspenders)
-  brickCanvas.style.visibility = 'hidden';
-  sigCanvas.style.visibility   = 'hidden';
+  // Wait for the snapshots to decode before opening print dialog.
+  // (data: URLs are usually instant, but Safari/Firefox have been
+  // known to fire the print dialog before the img repaints.)
+  const ready = img => new Promise(res => {
+    if (img.complete && img.naturalWidth) return res();
+    img.onload  = res;
+    img.onerror = res;
+  });
 
-  window.print();
-
-  // Restore after print dialog closes
-  brickCanvas.style.visibility = '';
-  sigCanvas.style.visibility   = '';
+  Promise.all([ready(brickImg), ready(sigImg)]).then(() => {
+    window.print();
+  });
 }
 
 function markFilled(input){input.classList.toggle('filled',input.value.trim().length>0);checkReady();}
